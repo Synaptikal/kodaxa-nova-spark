@@ -2,6 +2,8 @@ import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Settings, 
   Users, 
@@ -18,6 +20,30 @@ import {
 } from "lucide-react";
 
 export default function AdminPanel() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleExportLogs = () => {
+    toast({
+      title: "Export Initiated",
+      description: "Generating system logs export...",
+    });
+  };
+
+  const handleRefresh = () => {
+    toast({
+      title: "Refreshing Data",
+      description: "Updating system statistics and activity logs...",
+    });
+  };
+
+  const handleCardAction = (action: string, category: string) => {
+    toast({
+      title: `${category} Action`,
+      description: `Opening ${action} interface...`,
+    });
+  };
+
   const systemStats = [
     { label: "Total Users", value: "1,247", change: "+12%", icon: Users },
     { label: "Active Sessions", value: "89", change: "+5%", icon: Activity },
@@ -123,11 +149,11 @@ export default function AdminPanel() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleExportLogs}>
               <Download className="w-4 h-4 mr-2" />
               Export Logs
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleRefresh}>
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </Button>
@@ -180,7 +206,13 @@ export default function AdminPanel() {
                       </Badge>
                       <div className="flex flex-wrap gap-2">
                         {card.actions.map((action, actionIndex) => (
-                          <Button key={actionIndex} variant="outline" size="sm" className="text-xs">
+                          <Button 
+                            key={actionIndex} 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs"
+                            onClick={() => handleCardAction(action, card.title)}
+                          >
                             {action}
                           </Button>
                         ))}

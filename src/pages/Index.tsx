@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Play, ArrowRight, Activity } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     setIsLoaded(true);
@@ -52,12 +54,19 @@ const Index = () => {
                 designed for enterprise-scale operations and institutional decision-making.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-gradient-primary hover:shadow-executive transition-all duration-300 group px-8 py-4 text-lg font-medium">
+                <Button 
+                  onClick={() => navigate("/ai")}
+                  className="bg-gradient-primary hover:shadow-executive transition-all duration-300 group px-8 py-4 text-lg font-medium"
+                >
                   <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
                   Initialize Analysis
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
-                <Button variant="outline" className="glass border-glass-border/40 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 group px-8 py-4 text-lg font-medium">
+                <Button 
+                  onClick={() => navigate("/foundry")}
+                  variant="outline" 
+                  className="glass border-glass-border/40 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 group px-8 py-4 text-lg font-medium"
+                >
                   Platform Overview
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>

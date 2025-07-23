@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { 
   PlusCircle, 
   BarChart3, 
@@ -12,42 +14,62 @@ import {
 } from "lucide-react";
 
 export function QuickActions() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleAction = (actionType: string, description: string, route?: string) => {
+    if (route) {
+      navigate(route);
+    } else {
+      toast({
+        title: `${actionType} Initiated`,
+        description: description,
+      });
+    }
+  };
+
   const actions = [
     {
       icon: BarChart3,
       label: "New Analysis",
       description: "Create market sizing or financial model",
       variant: "default" as const,
+      action: () => handleAction("New Analysis", "Redirecting to Business Foundry for analysis creation", "/foundry"),
     },
     {
       icon: Brain,
       label: "Ask AI",
       description: "Get insights from your data",
       variant: "secondary" as const,
+      action: () => handleAction("AI Workspace", "Opening AI Quorum for intelligent insights", "/ai"),
     },
     {
       icon: Shield,
       label: "File Patent",
       description: "Submit new IP application",
       variant: "outline" as const,
+      action: () => handleAction("IP Filing", "Opening IP Fortress for patent management", "/ip"),
     },
     {
       icon: FileText,
       label: "Generate Report",
       description: "Export analytics to PDF",
       variant: "outline" as const,
+      action: () => handleAction("Report Generation", "Preparing comprehensive analytics report for download"),
     },
     {
       icon: Upload,
       label: "Import Data",
       description: "Upload financial or market data",
       variant: "ghost" as const,
+      action: () => handleAction("Data Import", "File upload dialog would open for data ingestion"),
     },
     {
       icon: Settings,
       label: "Configure",
       description: "Manage integrations and settings",
       variant: "ghost" as const,
+      action: () => handleAction("System Configuration", "Opening administrative settings panel", "/settings"),
     },
   ];
 
@@ -65,6 +87,7 @@ export function QuickActions() {
             <Button
               key={index}
               variant={action.variant}
+              onClick={action.action}
               className={`h-auto p-4 flex flex-col items-start text-left transition-all duration-200 hover:scale-105 ${
                 action.variant === "default" 
                   ? "bg-gradient-primary hover:shadow-glow" 

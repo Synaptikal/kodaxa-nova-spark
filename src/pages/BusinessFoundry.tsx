@@ -2,7 +2,8 @@ import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -17,6 +18,30 @@ import {
 } from "lucide-react";
 
 export default function BusinessFoundry() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleExportReports = () => {
+    toast({
+      title: "Export Initiated",
+      description: "Generating comprehensive business analysis reports...",
+    });
+  };
+
+  const handleNewAnalysis = () => {
+    toast({
+      title: "New Analysis",
+      description: "Opening analysis creation wizard...",
+    });
+  };
+
+  const handleViewDetails = (title: string) => {
+    toast({
+      title: "Analysis Details",
+      description: `Opening detailed view for ${title}`,
+    });
+  };
+
   const analysisCards = [
     {
       title: "Market Sizing (TAM/SAM/SOM)",
@@ -79,11 +104,11 @@ export default function BusinessFoundry() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleExportReports}>
               <FileText className="w-4 h-4 mr-2" />
               Export Reports
             </Button>
-            <Button>
+            <Button onClick={handleNewAnalysis}>
               <PlusCircle className="w-4 h-4 mr-2" />
               New Analysis
             </Button>
@@ -178,7 +203,12 @@ export default function BusinessFoundry() {
                     ))}
                   </div>
                   <div className="flex gap-2 pt-2">
-                    <Button size="sm" variant="outline" className="flex-1">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => handleViewDetails(card.title)}
+                    >
                       View Details
                     </Button>
                     <Button asChild size="sm" className="flex-1">

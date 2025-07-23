@@ -2,6 +2,8 @@ import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Shield, 
   FileText, 
@@ -17,6 +19,51 @@ import {
 import { Input } from "@/components/ui/input";
 
 export default function IPFortress() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleExportPortfolio = () => {
+    toast({
+      title: "Export Initiated",
+      description: "Generating IP portfolio report...",
+    });
+  };
+
+  const handleNewFiling = () => {
+    toast({
+      title: "New Filing",
+      description: "Opening IP application wizard...",
+    });
+  };
+
+  const handleViewDetails = (assetId: string) => {
+    toast({
+      title: "Asset Details",
+      description: `Opening detailed view for ${assetId}`,
+    });
+  };
+
+  const handleManage = (assetId: string) => {
+    toast({
+      title: "Asset Management",
+      description: `Opening management panel for ${assetId}`,
+    });
+  };
+
+  const handleFilter = () => {
+    toast({
+      title: "Filter Applied",
+      description: "Filtering IP assets by criteria...",
+    });
+  };
+
+  const handleImport = () => {
+    toast({
+      title: "Import Data",
+      description: "Opening file import dialog...",
+    });
+  };
+
   const ipAssets = [
     {
       id: "PAT-2024-001",
@@ -107,11 +154,11 @@ export default function IPFortress() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleExportPortfolio}>
               <Download className="w-4 h-4 mr-2" />
               Export Portfolio
             </Button>
-            <Button>
+            <Button onClick={handleNewFiling}>
               <PlusCircle className="w-4 h-4 mr-2" />
               New Filing
             </Button>
@@ -181,11 +228,11 @@ export default function IPFortress() {
                 />
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleFilter}>
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleImport}>
                   <Upload className="w-4 h-4 mr-2" />
                   Import
                 </Button>
@@ -251,10 +298,17 @@ export default function IPFortress() {
                       </div>
                       
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewDetails(asset.id)}
+                        >
                           View Details
                         </Button>
-                        <Button size="sm">
+                        <Button 
+                          size="sm"
+                          onClick={() => handleManage(asset.id)}
+                        >
                           Manage
                         </Button>
                       </div>
