@@ -13,7 +13,10 @@ import {
   Zap,
   Download,
   Settings,
-  RefreshCw
+  RefreshCw,
+  Edit,
+  Copy,
+  Play
 } from "lucide-react";
 
 export default function MarketSizing() {
