@@ -59,8 +59,8 @@ export function QuickActions() {
           Quick Actions
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-3">
+      <CardContent className="p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {actions.map((action, index) => (
             <Button
               key={index}

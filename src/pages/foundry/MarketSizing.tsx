@@ -4,20 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import circuitPattern from "@/assets/circuit-pattern.jpg";
 import { 
   Target, 
   TrendingUp, 
-  Users, 
-  DollarSign,
   BarChart3,
-  PieChart,
   Activity,
   Zap,
   Download,
   Settings,
-  Play,
-  Edit,
-  Copy,
   RefreshCw
 } from "lucide-react";
 
@@ -87,20 +82,25 @@ export default function MarketSizing() {
           </div>
         </div>
 
-        {/* Overview Cards */}
+        {/* Overview Cards with HUD styling */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="glass border-glass-border/30">
-            <CardContent className="p-6">
+          <Card className="glass border-glass-border/30 relative overflow-hidden group hover:border-primary/30 transition-all duration-300">
+            <div 
+              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              style={{ backgroundImage: `url(${circuitPattern})` }}
+            />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <Target className="w-8 h-8 text-primary" />
-                <Badge className="bg-primary/20 text-primary">TAM</Badge>
+                <Target className="w-8 h-8 text-primary group-hover:text-primary-glow transition-colors" />
+                <Badge className="bg-primary/20 text-primary border-primary/30 glow-primary">TAM</Badge>
               </div>
-              <h3 className="text-2xl font-bold">{formatCurrency(tamData.total)}</h3>
+              <h3 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">{formatCurrency(tamData.total)}</h3>
               <p className="text-sm text-muted-foreground mt-1">Total Addressable Market</p>
               <div className="mt-4 flex items-center text-sm">
                 <TrendingUp className="w-4 h-4 text-success mr-1" />
-                <span className="text-success">+12.4% CAGR</span>
+                <span className="text-success font-medium">+12.4% CAGR</span>
               </div>
+              <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-primary"></div>
             </CardContent>
           </Card>
 
