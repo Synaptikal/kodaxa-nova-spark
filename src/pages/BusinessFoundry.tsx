@@ -2,6 +2,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -11,7 +12,8 @@ import {
   Zap,
   FileText,
   Settings,
-  PlusCircle
+  PlusCircle,
+  ExternalLink
 } from "lucide-react";
 
 export default function BusinessFoundry() {
@@ -23,6 +25,7 @@ export default function BusinessFoundry() {
       lastUpdated: "2 hours ago",
       icon: Target,
       metrics: ["TAM: $2.4B", "SAM: $480M", "SOM: $48M"],
+      link: "/foundry/market-sizing",
     },
     {
       title: "Financial Projections",
@@ -31,6 +34,7 @@ export default function BusinessFoundry() {
       lastUpdated: "1 day ago",
       icon: DollarSign,
       metrics: ["5-Year NPV", "Break-even: Q3 2025", "IRR: 23%"],
+      link: "/foundry/financial-projections",
     },
     {
       title: "Competitive Analysis",
@@ -39,6 +43,7 @@ export default function BusinessFoundry() {
       lastUpdated: "3 days ago",
       icon: BarChart3,
       metrics: ["15 Competitors", "Market Share: 12%", "Ranking: #3"],
+      link: "/foundry/competitive-analysis",
     },
     {
       title: "Customer Segmentation",
@@ -47,6 +52,7 @@ export default function BusinessFoundry() {
       lastUpdated: "5 hours ago",
       icon: Users,
       metrics: ["4 Segments", "LTV: $2,840", "CAC: $185"],
+      link: "/foundry/customer-segmentation",
     },
   ];
 
@@ -175,8 +181,11 @@ export default function BusinessFoundry() {
                     <Button size="sm" variant="outline" className="flex-1">
                       View Details
                     </Button>
-                    <Button size="sm" className="flex-1">
-                      Open Model
+                    <Button asChild size="sm" className="flex-1">
+                      <Link to={card.link} className="flex items-center">
+                        Open Model
+                        <ExternalLink className="w-3 h-3 ml-1" />
+                      </Link>
                     </Button>
                   </div>
                 </div>
