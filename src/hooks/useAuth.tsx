@@ -27,11 +27,21 @@ interface SubscriptionData {
   annual_billing: boolean;
 }
 
+interface UserRole {
+  id: string;
+  user_id: string;
+  role: 'admin' | 'moderator' | 'user';
+  created_at: string;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
   subscription: SubscriptionData | null;
+  userRoles: UserRole[];
+  isAdmin: boolean;
+  isModerator: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
@@ -57,8 +67,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
+  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Computed properties for role checking
+  const isAdmin = userRoles.some(role => role.role === 'admin');
+  const isModerator = userRoles.some(role => role.role === 'moderator');
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -76,6 +91,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setProfile(data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+    }
+  };
+
+  const fetchUserRoles = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (error) {
+        console.error('Error fetching user roles:', error);
+        return;
+      }
+
+      setUserRoles(data || []);
+    } catch (error) {
+      console.error('Error fetching user roles:', error);
     }
   };
 
@@ -108,13 +141,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user profile and subscription
+          // Fetch user profile, roles, and subscription
           setTimeout(() => {
             fetchProfile(session.user.id);
+            fetchUserRoles(session.user.id);
             checkSubscription();
           }, 0);
         } else {
           setProfile(null);
+          setUserRoles([]);
           setSubscription(null);
         }
 
@@ -129,6 +164,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (session?.user) {
         fetchProfile(session.user.id);
+        fetchUserRoles(session.user.id);
         checkSubscription();
       }
       
@@ -147,6 +183,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(null);
         setSession(null);
         setProfile(null);
+        setUserRoles([]);
         setSubscription(null);
         navigate('/auth');
       }
@@ -183,6 +220,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     session,
     profile,
     subscription,
+    userRoles,
+    isAdmin,
+    isModerator,
     loading,
     signOut,
     updateProfile,
