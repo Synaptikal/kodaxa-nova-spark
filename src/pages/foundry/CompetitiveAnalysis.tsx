@@ -35,10 +35,41 @@ import {
   Settings,
   RefreshCw,
   Filter,
-  Search
+  Search,
+  Zap,
+  Award,
+  TrendingDown
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Animated Counter Hook
+const useAnimatedCounter = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [end, duration]);
+  
+  return count;
+};
 
 export default function CompetitiveAnalysis() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const competitorData = [
     { name: "Competitor A", marketShare: 28, revenue: 850, growth: 12, features: 8.5 },
     { name: "Competitor B", marketShare: 22, revenue: 670, growth: 8, features: 7.2 },
@@ -67,112 +98,206 @@ export default function CompetitiveAnalysis() {
     { month: "Jun", marketSize: 2500, growth: 18 }
   ];
 
-  const pieColors = ["#0ea5e9", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#6b7280"];
+  const pieColors = ["hsl(var(--primary))", "hsl(var(--accent))", "hsl(var(--success))", "hsl(var(--warning))", "hsl(var(--destructive))", "hsl(var(--muted-foreground))"];
+
+  // Animated values
+  const marketRank = useAnimatedCounter(3, 2000);
+  const marketShare = useAnimatedCounter(12, 2000);
+  const growthRate = useAnimatedCounter(23, 2000);
+  const competitorCount = useAnimatedCounter(15, 2000);
 
   return (
     <Layout title="Competitive Analysis">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-glow to-accent-glow bg-clip-text text-transparent">
-              Competitive Analysis
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Real-time competitor intelligence and market positioning analysis
+        <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Award className="w-8 h-8 text-primary animate-pulse" />
+                <div className="absolute inset-0 w-8 h-8 bg-primary/20 rounded-full animate-ping" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-glow via-accent-glow to-warning-glow bg-clip-text text-transparent">
+                Competitive Analysis
+              </h1>
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Real-time competitor intelligence and market positioning analysis with AI insights
             </p>
+            <div className="flex gap-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                <Zap className="w-3 h-3 mr-1" />
+                Live Intelligence
+              </Badge>
+              <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+                15 Tracked Competitors
+              </Badge>
+            </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 group">
+              <Download className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
               Export Report
             </Button>
-            <Button variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-accent/10 hover:border-accent/30 transition-all duration-300 group">
+              <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
               Refresh Data
             </Button>
-            <Button>
-              <Settings className="w-4 h-4 mr-2" />
+            <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent-glow transition-all duration-300 shadow-lg hover:shadow-xl group">
+              <Settings className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-300" />
               Configure
             </Button>
           </div>
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="glass border-glass-border/30 relative overflow-hidden group">
+        <div className={`grid grid-cols-1 md:grid-cols-4 gap-6 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Market Rank</p>
-                  <p className="text-2xl font-bold text-accent">#3</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Market Rank</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
+                      #{marketRank}
+                    </p>
+                    <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                      ↑2 positions
+                    </Badge>
+                  </div>
                 </div>
-                <Target className="w-8 h-8 text-accent" />
+                <div className="relative">
+                  <Target className="w-10 h-10 text-accent group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-accent/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-primary hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Market Share</p>
-                  <p className="text-2xl font-bold text-primary">12%</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Market Share</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                      {marketShare}%
+                    </p>
+                    <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                      +3.2%
+                    </Badge>
+                  </div>
                 </div>
-                <PieChartIcon className="w-8 h-8 text-primary" />
+                <div className="relative">
+                  <PieChartIcon className="w-10 h-10 text-primary group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Growth Rate</p>
-                  <p className="text-2xl font-bold text-success">+23%</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Growth Rate</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-success to-success-glow bg-clip-text text-transparent">
+                      +{growthRate}%
+                    </p>
+                    <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                      Leading
+                    </Badge>
+                  </div>
                 </div>
-                <TrendingUp className="w-8 h-8 text-success" />
+                <div className="relative">
+                  <TrendingUp className="w-10 h-10 text-success group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-success/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Competitors</p>
-                  <p className="text-2xl font-bold text-warning">15</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Tracked Competitors</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-warning to-warning-glow bg-clip-text text-transparent">
+                      {competitorCount}
+                    </p>
+                    <Badge variant="secondary" className="bg-warning/10 text-warning text-xs">
+                      +2 new
+                    </Badge>
+                  </div>
                 </div>
-                <Users className="w-8 h-8 text-warning" />
+                <div className="relative">
+                  <Users className="w-10 h-10 text-warning group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-warning/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Analysis Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Market Overview</TabsTrigger>
-            <TabsTrigger value="features">Feature Comparison</TabsTrigger>
-            <TabsTrigger value="positioning">Positioning</TabsTrigger>
-            <TabsTrigger value="trends">Market Trends</TabsTrigger>
-          </TabsList>
+        <div className={`transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <Tabs defaultValue="overview" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 glass border-glass-border/30 p-1">
+              <TabsTrigger 
+                value="overview" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <BarChart3 className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Market Overview</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="features" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-accent/20 data-[state=active]:text-accent data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-success/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <Activity className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Feature Comparison</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="positioning" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-success/20 data-[state=active]:text-success data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-success/10 to-warning/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <Target className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Positioning</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="trends" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-warning/20 data-[state=active]:text-warning data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-warning/10 to-primary/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <TrendingUp className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Market Trends</span>
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -303,7 +428,8 @@ export default function CompetitiveAnalysis() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );

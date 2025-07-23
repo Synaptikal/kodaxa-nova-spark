@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import circuitPattern from "@/assets/circuit-pattern.jpg";
 import { 
   DollarSign, 
   TrendingUp, 
@@ -17,10 +18,41 @@ import {
   Save,
   Play,
   RefreshCw,
-  Settings
+  Settings,
+  Zap,
+  Activity,
+  TrendingDown
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Animated Counter Hook
+const useAnimatedCounter = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [end, duration]);
+  
+  return count;
+};
 
 export default function FinancialProjections() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   const projectionData = {
     revenue: [
       { year: "Y1", value: 500000, growth: 0 },
@@ -71,60 +103,91 @@ export default function FinancialProjections() {
     return `$${value}`;
   };
 
+  // Animated values
+  const baseARR = useAnimatedCounter(98, 3000);
+  const baseEBITDA = useAnimatedCounter(146, 3000);
+  const baseValuation = useAnimatedCounter(980, 3000);
+
   return (
     <Layout title="Financial Projections">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-glow to-success-glow bg-clip-text text-transparent">
-              Financial Projections
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Multi-scenario financial modeling with AI-powered validation
+        <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Calculator className="w-8 h-8 text-primary animate-pulse" />
+                <div className="absolute inset-0 w-8 h-8 bg-primary/20 rounded-full animate-ping" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-glow via-success-glow to-accent-glow bg-clip-text text-transparent">
+                Financial Projections
+              </h1>
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Multi-scenario financial modeling with AI-powered validation and real-time analytics
             </p>
+            <div className="flex gap-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                <Zap className="w-3 h-3 mr-1" />
+                Monte Carlo Ready
+              </Badge>
+              <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+                3 Scenarios
+              </Badge>
+            </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 group">
+              <Download className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
               Export Model
             </Button>
-            <Button variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-accent/10 hover:border-accent/30 transition-all duration-300 group">
+              <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
               Recalculate
             </Button>
-            <Button>
-              <Save className="w-4 h-4 mr-2" />
+            <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent-glow transition-all duration-300 shadow-lg hover:shadow-xl group">
+              <Save className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
               Save Model
             </Button>
           </div>
         </div>
 
         {/* Scenario Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {scenarios.map((scenario, index) => (
-            <Card key={index} className="glass border-glass-border/30 hover:border-primary/20 transition-all duration-300">
-              <CardHeader>
+            <Card key={index} className="glass border-glass-border/30 relative overflow-hidden hover:glow-primary hover:scale-105 transition-all duration-500 group">
+              <div 
+                className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
+                style={{ backgroundImage: `url(${circuitPattern})` }}
+              />
+              <div className={`absolute inset-0 bg-gradient-to-br from-${scenario.color}/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              <CardHeader className="relative z-10">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{scenario.name}</CardTitle>
-                  <Badge className={`bg-${scenario.color}/20 text-${scenario.color}`}>
+                  <CardTitle className="text-xl">{scenario.name}</CardTitle>
+                  <Badge className={`bg-${scenario.color}/20 text-${scenario.color} border-${scenario.color}/30`}>
                     {scenario.confidence}% confidence
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
+              <CardContent className="relative z-10">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">5Y ARR:</span>
-                    <span className="font-bold">{formatCurrency(scenario.arr)}</span>
+                    <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                      {index === 0 ? `$${baseARR}.0M` : formatCurrency(scenario.arr)}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">EBITDA:</span>
-                    <span className="font-bold">{formatCurrency(scenario.ebitda)}</span>
+                    <span className="text-lg font-bold">
+                      {index === 0 ? `$${baseEBITDA}M` : formatCurrency(scenario.ebitda)}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">Valuation:</span>
-                    <span className="font-bold">{formatCurrency(scenario.valuation)}</span>
+                    <span className="text-lg font-bold">
+                      {index === 0 ? `$${baseValuation}M` : formatCurrency(scenario.valuation)}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -133,14 +196,50 @@ export default function FinancialProjections() {
         </div>
 
         {/* Detailed Projections */}
-        <Tabs defaultValue="revenue" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="revenue">Revenue</TabsTrigger>
-            <TabsTrigger value="costs">Costs</TabsTrigger>
-            <TabsTrigger value="profitability">P&L</TabsTrigger>
-            <TabsTrigger value="cashflow">Cash Flow</TabsTrigger>
-            <TabsTrigger value="assumptions">Assumptions</TabsTrigger>
-          </TabsList>
+        <div className={`transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <Tabs defaultValue="revenue" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-5 glass border-glass-border/30 p-1">
+              <TabsTrigger 
+                value="revenue" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-success/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <LineChart className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Revenue</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="costs" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-accent/20 data-[state=active]:text-accent data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-warning/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <PieChart className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Costs</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="profitability" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-success/20 data-[state=active]:text-success data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-success/10 to-primary/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <TrendingUp className="w-4 h-4 mr-2" />
+                <span className="relative z-10">P&L</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="cashflow" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-warning/20 data-[state=active]:text-warning data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-warning/10 to-accent/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <DollarSign className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Cash Flow</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="assumptions" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-muted/20 data-[state=active]:text-foreground data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-muted/10 to-primary/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <Calculator className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Assumptions</span>
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="revenue" className="space-y-4">
             <Card className="glass border-glass-border/30">
@@ -297,7 +396,8 @@ export default function FinancialProjections() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );
