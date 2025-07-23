@@ -18,6 +18,8 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Pricing from "./pages/Pricing";
 import Subscription from "./pages/Subscription";
+import AddOnMarketplace from "./pages/AddOnMarketplace";
+import RevenueAnalytics from "./pages/RevenueAnalytics";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -115,6 +117,16 @@ const App = () => (
         <Route path="/subscription-success" element={
           <ProtectedRoute>
             <Subscription />
+          </ProtectedRoute>
+        } />
+        <Route path="/add-ons" element={
+          <ProtectedRoute>
+            <AddOnMarketplace />
+          </ProtectedRoute>
+        } />
+        <Route path="/analytics" element={
+          <ProtectedRoute>
+            <RevenueAnalytics />
           </ProtectedRoute>
         } />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
