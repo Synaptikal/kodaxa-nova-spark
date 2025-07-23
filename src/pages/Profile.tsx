@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,7 +67,7 @@ export default function Profile() {
   ];
 
   return (
-    <MainLayout>
+    <Layout title="Profile & Settings">
       <div className="space-y-6 max-w-4xl">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -312,6 +312,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </Layout>
   );
 }

@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -66,7 +66,7 @@ export default function BusinessFoundry() {
   };
 
   return (
-    <MainLayout>
+    <Layout title="Business Foundry">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -194,6 +194,6 @@ export default function BusinessFoundry() {
           ))}
         </div>
       </div>
-    </MainLayout>
+    </Layout>
   );
 }

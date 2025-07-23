@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -229,7 +229,7 @@ export default function AIWorkspace() {
   };
 
   return (
-    <MainLayout>
+    <Layout title="AI Quorum Workspace">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -570,6 +570,6 @@ export default function AIWorkspace() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
+    </Layout>
   );
 }

@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Layout } from "@/components/common/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,7 +70,7 @@ export default function CompetitiveAnalysis() {
   const pieColors = ["#0ea5e9", "#8b5cf6", "#10b981", "#f59e0b", "#ef4444", "#6b7280"];
 
   return (
-    <MainLayout>
+    <Layout title="Competitive Analysis">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -305,6 +305,6 @@ export default function CompetitiveAnalysis() {
           </TabsContent>
         </Tabs>
       </div>
-    </MainLayout>
+    </Layout>
   );
 }

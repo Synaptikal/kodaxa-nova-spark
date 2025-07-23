@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Layout } from "@/components/common/Layout";
 import { MetricsGrid } from "@/components/dashboard/MetricsGrid";
 import { AIInsightsCard } from "@/components/dashboard/AIInsightsCard";
 import { QuickActions } from "@/components/dashboard/QuickActions";
@@ -7,7 +7,7 @@ import heroImage from "@/assets/hero-dashboard.jpg";
 
 const Index = () => {
   return (
-    <MainLayout>
+    <Layout title="Dashboard" showSidebar={false}>
       <div className="space-y-6">
         {/* Hero Section */}
         <div className="relative rounded-xl overflow-hidden glass border-glass-border/30">
@@ -55,7 +55,7 @@ const Index = () => {
         {/* Recent Activity */}
         <RecentActivity />
       </div>
-    </MainLayout>
+    </Layout>
   );
 };
 
