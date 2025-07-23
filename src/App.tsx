@@ -1,9 +1,10 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Auth from "./pages/Auth";
 import Index from "./pages/Index";
 import BusinessFoundry from "./pages/BusinessFoundry";
 import MarketSizing from "./pages/foundry/MarketSizing";
@@ -17,38 +18,93 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AppProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/business-foundry" element={<BusinessFoundry />} />
-            <Route path="/foundry" element={<BusinessFoundry />} />
-            <Route path="/foundry/market-sizing" element={<MarketSizing />} />
-            <Route path="/foundry/financial-projections" element={<FinancialProjections />} />
-            <Route path="/foundry/competitive-analysis" element={<CompetitiveAnalysis />} />
-            <Route path="/foundry/customer-segmentation" element={<CustomerSegmentation />} />
-            <Route path="/ai-workspace" element={<AIWorkspace />} />
-            <Route path="/ai" element={<AIWorkspace />} />
-            <Route path="/ip-fortress" element={<IPFortress />} />
-            <Route path="/ip" element={<IPFortress />} />
-            <Route path="/compliance-sentinel" element={<AdminPanel />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AppProvider>
-  </QueryClientProvider>
+  <AppProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <Routes>
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Index />
+          </ProtectedRoute>
+        } />
+        <Route path="/business-foundry" element={
+          <ProtectedRoute>
+            <BusinessFoundry />
+          </ProtectedRoute>
+        } />
+        <Route path="/foundry" element={
+          <ProtectedRoute>
+            <BusinessFoundry />
+          </ProtectedRoute>
+        } />
+        <Route path="/foundry/market-sizing" element={
+          <ProtectedRoute>
+            <MarketSizing />
+          </ProtectedRoute>
+        } />
+        <Route path="/foundry/financial-projections" element={
+          <ProtectedRoute>
+            <FinancialProjections />
+          </ProtectedRoute>
+        } />
+        <Route path="/foundry/competitive-analysis" element={
+          <ProtectedRoute>
+            <CompetitiveAnalysis />
+          </ProtectedRoute>
+        } />
+        <Route path="/foundry/customer-segmentation" element={
+          <ProtectedRoute>
+            <CustomerSegmentation />
+          </ProtectedRoute>
+        } />
+        <Route path="/ai-workspace" element={
+          <ProtectedRoute>
+            <AIWorkspace />
+          </ProtectedRoute>
+        } />
+        <Route path="/ai" element={
+          <ProtectedRoute>
+            <AIWorkspace />
+          </ProtectedRoute>
+        } />
+        <Route path="/ip-fortress" element={
+          <ProtectedRoute>
+            <IPFortress />
+          </ProtectedRoute>
+        } />
+        <Route path="/ip" element={
+          <ProtectedRoute>
+            <IPFortress />
+          </ProtectedRoute>
+        } />
+        <Route path="/compliance-sentinel" element={
+          <ProtectedRoute>
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminPanel />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <Settings />
+          </ProtectedRoute>
+        } />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </TooltipProvider>
+  </AppProvider>
 );
 
 export default App;
