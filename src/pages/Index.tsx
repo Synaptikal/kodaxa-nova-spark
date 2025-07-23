@@ -74,8 +74,8 @@ const Index = () => {
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform relative z-10" />
                 </Button>
                 <Button 
-                  onClick={() => navigate("/foundry")}
-                  onMouseEnter={() => preloadOnHover("/foundry")}
+                  onClick={() => navigate("/forge")}
+                  onMouseEnter={() => preloadOnHover("/forge")}
                   variant="outline" 
                   className="glass border-glass-border/40 hover:bg-primary/8 hover:border-primary/40 hover:shadow-card transition-all duration-500 group px-8 py-4 text-lg font-semibold"
                 >

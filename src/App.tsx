@@ -13,11 +13,11 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages for better performance
-const BusinessFoundry = lazy(() => import("./pages/BusinessFoundry"));
-const MarketSizing = lazy(() => import("./pages/foundry/MarketSizing"));
-const FinancialProjections = lazy(() => import("./pages/foundry/FinancialProjections"));
-const CompetitiveAnalysis = lazy(() => import("./pages/foundry/CompetitiveAnalysis"));
-const CustomerSegmentation = lazy(() => import("./pages/foundry/CustomerSegmentation"));
+const CapitalForge = lazy(() => import("./pages/CapitalForge"));
+const MarketSizing = lazy(() => import("./pages/forge/MarketSizing"));
+const FinancialProjections = lazy(() => import("./pages/forge/FinancialProjections"));
+const CompetitiveAnalysis = lazy(() => import("./pages/forge/CompetitiveAnalysis"));
+const CustomerSegmentation = lazy(() => import("./pages/forge/CustomerSegmentation"));
 const AIWorkspace = lazy(() => import("./pages/AIWorkspace"));
 const IPFortress = lazy(() => import("./pages/IPFortress"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -56,42 +56,42 @@ const App = () => (
               <Index />
             </ProtectedRoute>
           } />
-          <Route path="/business-foundry" element={
+          <Route path="/capital-forge" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
-                <BusinessFoundry />
+                <CapitalForge />
               </Suspense>
             </ProtectedRoute>
           } />
-          <Route path="/foundry" element={
+          <Route path="/forge" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
-                <BusinessFoundry />
+                <CapitalForge />
               </Suspense>
             </ProtectedRoute>
           } />
-          <Route path="/foundry/market-sizing" element={
+          <Route path="/forge/market-sizing" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <MarketSizing />
               </Suspense>
             </ProtectedRoute>
           } />
-          <Route path="/foundry/financial-projections" element={
+          <Route path="/forge/financial-projections" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <FinancialProjections />
               </Suspense>
             </ProtectedRoute>
           } />
-          <Route path="/foundry/competitive-analysis" element={
+          <Route path="/forge/competitive-analysis" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <CompetitiveAnalysis />
               </Suspense>
             </ProtectedRoute>
           } />
-          <Route path="/foundry/customer-segmentation" element={
+          <Route path="/forge/customer-segmentation" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <CustomerSegmentation />

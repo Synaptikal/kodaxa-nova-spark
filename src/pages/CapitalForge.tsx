@@ -17,7 +17,7 @@ import {
   ExternalLink
 } from "lucide-react";
 
-export default function BusinessFoundry() {
+export default function CapitalForge() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,7 +50,7 @@ export default function BusinessFoundry() {
       lastUpdated: "2 hours ago",
       icon: Target,
       metrics: ["TAM: $2.4B", "SAM: $480M", "SOM: $48M"],
-      link: "/foundry/market-sizing",
+      link: "/forge/market-sizing",
     },
     {
       title: "Financial Projections",
@@ -59,7 +59,7 @@ export default function BusinessFoundry() {
       lastUpdated: "1 day ago",
       icon: DollarSign,
       metrics: ["5-Year NPV", "Break-even: Q3 2025", "IRR: 23%"],
-      link: "/foundry/financial-projections",
+      link: "/forge/financial-projections",
     },
     {
       title: "Competitive Analysis",
@@ -68,7 +68,7 @@ export default function BusinessFoundry() {
       lastUpdated: "3 days ago",
       icon: BarChart3,
       metrics: ["15 Competitors", "Market Share: 12%", "Ranking: #3"],
-      link: "/foundry/competitive-analysis",
+      link: "/forge/competitive-analysis",
     },
     {
       title: "Customer Segmentation",
@@ -77,7 +77,7 @@ export default function BusinessFoundry() {
       lastUpdated: "5 hours ago",
       icon: Users,
       metrics: ["4 Segments", "LTV: $2,840", "CAC: $185"],
-      link: "/foundry/customer-segmentation",
+      link: "/forge/customer-segmentation",
     },
   ];
 
@@ -91,13 +91,13 @@ export default function BusinessFoundry() {
   };
 
   return (
-    <Layout title="Business Foundry">
+    <Layout title="Capital Forge">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-glow to-accent-glow bg-clip-text text-transparent">
-              Business Foundry
+              Capital Forge
             </h1>
             <p className="text-muted-foreground mt-2">
               Advanced business analytics and modeling powered by AI

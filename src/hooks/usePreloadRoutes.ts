@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 // Preload components based on user navigation patterns
 const routePreloadMap: Record<string, () => Promise<any>> = {
   '/': () => import('@/pages/AIWorkspace'),
-  '/ai': () => import('@/pages/BusinessFoundry'),
-  '/foundry': () => import('@/pages/foundry/MarketSizing'),
+  '/ai': () => import('@/pages/CapitalForge'),
+  '/forge': () => import('@/pages/forge/MarketSizing'),
   '/ip': () => import('@/pages/Profile'),
 };
 

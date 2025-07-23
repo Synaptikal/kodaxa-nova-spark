@@ -43,7 +43,7 @@ const defaultMenuItems: MenuItem[] = [
   { label: 'Dashboard', href: '/', icon: Home },
   { label: 'AI Workspace', href: '/ai', icon: Brain },
   { label: 'IP Fortress', href: '/ip', icon: Shield },
-  { label: 'Business Foundry', href: '/foundry', icon: BarChart3 },
+  { label: 'Capital Forge', href: '/forge', icon: BarChart3 },
   { label: 'Admin Panel', href: '/admin', icon: Settings },
 ];
 
@@ -56,11 +56,11 @@ const aiWorkspaceMenuItems: MenuItem[] = [
 ];
 
 const businessMenuItems: MenuItem[] = [
-  { label: 'Foundry Dashboard', href: '/foundry', icon: BarChart3 },
-  { label: 'Market Sizing', href: '/foundry/market-sizing', icon: Target },
-  { label: 'Financial Projections', href: '/foundry/financial-projections', icon: DollarSign },
-  { label: 'Competitive Analysis', href: '/foundry/competitive-analysis', icon: TrendingUp },
-  { label: 'Customer Segmentation', href: '/foundry/customer-segmentation', icon: Users },
+  { label: 'Forge Dashboard', href: '/forge', icon: BarChart3 },
+  { label: 'Market Sizing', href: '/forge/market-sizing', icon: Target },
+  { label: 'Financial Projections', href: '/forge/financial-projections', icon: DollarSign },
+  { label: 'Competitive Analysis', href: '/forge/competitive-analysis', icon: TrendingUp },
+  { label: 'Customer Segmentation', href: '/forge/customer-segmentation', icon: Users },
 ];
 
 const ipFortressMenuItems: MenuItem[] = [
@@ -76,7 +76,7 @@ export const Sidebar: React.FC = () => {
   const getMenuItems = (): MenuItem[] => {
     if (pathname.startsWith('/ai')) return aiWorkspaceMenuItems;
     if (pathname.startsWith('/ip')) return ipFortressMenuItems;
-    if (pathname.startsWith('/foundry')) return businessMenuItems;
+    if (pathname.startsWith('/forge')) return businessMenuItems;
     return defaultMenuItems;
   };
 

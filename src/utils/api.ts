@@ -82,22 +82,22 @@ class APIClient {
     return this.get('/ip-fortress/maintenance/alerts');
   }
   
-  // Business Foundry endpoints
+  // Capital Forge endpoints
   async runMarketSizing(data: any) {
-    return this.post('/business-foundry/market-sizing', data);
+    return this.post('/capital-forge/market-sizing', data);
   }
 
   async generateFinancialProjections(data: any) {
-    return this.post('/business-foundry/financial-projections', data);
+    return this.post('/capital-forge/financial-projections', data);
   }
 
   async getCompetitiveAnalysis(filters: any = {}) {
     const queryParams = new URLSearchParams(filters).toString();
-    return this.get(`/business-foundry/competitive-analysis?${queryParams}`);
+    return this.get(`/capital-forge/competitive-analysis?${queryParams}`);
   }
 
   async getCustomerSegmentation() {
-    return this.get('/business-foundry/customer-segmentation');
+    return this.get('/capital-forge/customer-segmentation');
   }
 
   // Admin endpoints

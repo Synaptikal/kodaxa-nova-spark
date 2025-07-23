@@ -34,7 +34,7 @@ export function QuickActions() {
       label: "Market Intelligence",
       description: "Generate TAM/SAM analysis",
       variant: "default" as const,
-      action: () => handleAction("Market Analysis", "Launching comprehensive market intelligence suite", "/foundry"),
+      action: () => handleAction("Market Analysis", "Launching comprehensive market intelligence suite", "/forge"),
     },
     {
       icon: Brain,

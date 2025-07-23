@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
         <nav className="flex items-center gap-1">
           <NavLink href="/ai">AI Workspace</NavLink>
           <NavLink href="/ip">IP Fortress</NavLink>
-          <NavLink href="/foundry">Business Foundry</NavLink>
+          <NavLink href="/forge">Capital Forge</NavLink>
           <NavLink href="/admin">Administration</NavLink>
           <div className="h-6 w-px bg-border/50 mx-2" />
           <UserMenu />

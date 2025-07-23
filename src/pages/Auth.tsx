@@ -160,7 +160,7 @@ const Auth = () => {
                 <Building2 className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Business Foundry</h3>
+                <h3 className="font-semibold text-foreground">Capital Forge</h3>
                 <p className="text-sm text-muted-foreground">Market sizing, financial projections, and competitive analysis</p>
               </div>
             </div>
