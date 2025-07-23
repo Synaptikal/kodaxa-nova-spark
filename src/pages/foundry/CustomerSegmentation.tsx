@@ -35,10 +35,43 @@ import {
   Settings,
   RefreshCw,
   Filter,
-  UserPlus
+  UserPlus,
+  Zap,
+  Activity,
+  BarChart3,
+  PieChart as PieChartIcon
 } from "lucide-react";
+import { useState, useEffect } from "react";
+
+// Animated Counter Hook
+const useAnimatedCounter = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    let start = 0;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setCount(end);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [end, duration]);
+  
+  return count;
+};
 
 export default function CustomerSegmentation() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   const segmentData = [
     { segment: "Enterprise", users: 2847, ltv: 28500, cac: 2400, churn: 2.1, satisfaction: 9.2 },
     { segment: "Mid-Market", users: 8923, ltv: 12300, cac: 980, churn: 3.8, satisfaction: 8.7 },
@@ -70,117 +103,219 @@ export default function CustomerSegmentation() {
     { feature: "Support", enterprise: 89, midMarket: 76, smb: 68, startup: 52 }
   ];
 
-  const segmentColors = ["#0ea5e9", "#8b5cf6", "#10b981", "#f59e0b"];
+  const segmentColors = ["hsl(var(--primary))", "hsl(var(--accent))", "hsl(var(--success))", "hsl(var(--warning))"];
 
   const formatCurrency = (value: number) => {
     if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
     return `$${value}`;
   };
 
+  // Animated values for metric cards
+  const totalCustomers = useAnimatedCounter(40260, 3000);
+  const avgLTV = useAnimatedCounter(8420, 3000);
+  const avgCAC = useAnimatedCounter(875, 3000);
+  const ltvCacRatio = useAnimatedCounter(123, 3000);
+
+  // Loading state component
+  const LoadingSkeleton = () => (
+    <div className="animate-pulse">
+      <div className="h-4 bg-muted/20 rounded w-3/4 mb-2"></div>
+      <div className="h-8 bg-muted/20 rounded w-1/2"></div>
+    </div>
+  );
+
   return (
     <Layout title="Customer Segmentation">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-success-glow to-primary-glow bg-clip-text text-transparent">
-              Customer Segmentation
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Advanced customer analytics and lifetime value modeling
+        <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Activity className="w-8 h-8 text-primary animate-pulse" />
+                <div className="absolute inset-0 w-8 h-8 bg-primary/20 rounded-full animate-ping" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-glow via-accent-glow to-success-glow bg-clip-text text-transparent">
+                Customer Segmentation
+              </h1>
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Advanced customer analytics and lifetime value modeling with real-time insights
             </p>
+            <div className="flex gap-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                <Zap className="w-3 h-3 mr-1" />
+                AI-Powered
+              </Badge>
+              <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+                Live Data
+              </Badge>
+            </div>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 group">
+              <Download className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
               Export Analysis
             </Button>
-            <Button variant="outline">
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-accent/10 hover:border-accent/30 transition-all duration-300 group">
+              <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
               Refresh Data
             </Button>
-            <Button>
-              <Settings className="w-4 h-4 mr-2" />
+            <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent-glow transition-all duration-300 shadow-lg hover:shadow-xl group">
+              <Settings className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-300" />
               Configure
             </Button>
           </div>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+        <div className={`grid grid-cols-1 md:grid-cols-4 gap-6 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-primary hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Total Customers</p>
-                  <p className="text-2xl font-bold text-primary">40,260</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Total Customers</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
+                      {totalCustomers.toLocaleString()}
+                    </p>
+                    <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                      +12.5%
+                    </Badge>
+                  </div>
                 </div>
-                <Users className="w-8 h-8 text-primary" />
+                <div className="relative">
+                  <Users className="w-10 h-10 text-primary group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-primary/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Avg LTV</p>
-                  <p className="text-2xl font-bold text-success">$8,420</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Avg LTV</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-success to-success-glow bg-clip-text text-transparent">
+                      ${avgLTV.toLocaleString()}
+                    </p>
+                    <Badge variant="secondary" className="bg-success/10 text-success text-xs">
+                      +8.3%
+                    </Badge>
+                  </div>
                 </div>
-                <DollarSign className="w-8 h-8 text-success" />
+                <div className="relative">
+                  <DollarSign className="w-10 h-10 text-success group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-success/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Avg CAC</p>
-                  <p className="text-2xl font-bold text-warning">$875</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">Avg CAC</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-warning to-warning-glow bg-clip-text text-transparent">
+                      ${avgCAC.toLocaleString()}
+                    </p>
+                    <Badge variant="secondary" className="bg-warning/10 text-warning text-xs">
+                      -5.2%
+                    </Badge>
+                  </div>
                 </div>
-                <Target className="w-8 h-8 text-warning" />
+                <div className="relative">
+                  <Target className="w-10 h-10 text-warning group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-warning/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="glass border-glass-border/30 relative overflow-hidden">
+          <Card className="glass border-glass-border/30 relative overflow-hidden hover:glow-accent hover:scale-105 transition-all duration-500 group">
             <div 
-              className="absolute inset-0 opacity-5 bg-cover bg-center"
+              className="absolute inset-0 opacity-5 bg-cover bg-center transition-opacity duration-500 group-hover:opacity-10"
               style={{ backgroundImage: `url(${circuitPattern})` }}
             />
-            <CardContent className="p-4 relative z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <CardContent className="p-6 relative z-10">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">LTV/CAC Ratio</p>
-                  <p className="text-2xl font-bold text-accent">12.3x</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground uppercase tracking-wider font-medium">LTV/CAC Ratio</p>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-accent to-accent-glow bg-clip-text text-transparent">
+                      {(ltvCacRatio / 10).toFixed(1)}x
+                    </p>
+                    <Badge variant="secondary" className="bg-accent/10 text-accent text-xs">
+                      +15.7%
+                    </Badge>
+                  </div>
                 </div>
-                <TrendingUp className="w-8 h-8 text-accent" />
+                <div className="relative">
+                  <TrendingUp className="w-10 h-10 text-accent group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-accent/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Analysis Tabs */}
-        <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Segment Overview</TabsTrigger>
-            <TabsTrigger value="cohort">Cohort Analysis</TabsTrigger>
-            <TabsTrigger value="ltvcac">LTV/CAC Analysis</TabsTrigger>
-            <TabsTrigger value="behavior">Behavior Patterns</TabsTrigger>
-          </TabsList>
+        <div className={`transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <Tabs defaultValue="overview" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4 glass border-glass-border/30 p-1">
+              <TabsTrigger 
+                value="overview" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <BarChart3 className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Segment Overview</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="cohort" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-accent/20 data-[state=active]:text-accent data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-success/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <Activity className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Cohort Analysis</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="ltvcac" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-success/20 data-[state=active]:text-success data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-success/10 to-warning/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <TrendingUp className="w-4 h-4 mr-2" />
+                <span className="relative z-10">LTV/CAC Analysis</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="behavior" 
+                className="relative overflow-hidden transition-all duration-300 data-[state=active]:bg-warning/20 data-[state=active]:text-warning data-[state=active]:shadow-lg group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-warning/10 to-primary/10 opacity-0 group-data-[state=active]:opacity-100 transition-opacity duration-300" />
+                <PieChartIcon className="w-4 h-4 mr-2" />
+                <span className="relative z-10">Behavior Patterns</span>
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -369,7 +504,8 @@ export default function CustomerSegmentation() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );
