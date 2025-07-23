@@ -27,6 +27,10 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const Subscription = lazy(() => import("./pages/Subscription"));
 const AddOnMarketplace = lazy(() => import("./pages/AddOnMarketplace"));
 const RevenueAnalytics = lazy(() => import("./pages/RevenueAnalytics"));
+const DeliberationRooms = lazy(() => import("./pages/aiworkspace/DeliberationRooms"));
+const TaskHistory = lazy(() => import("./pages/aiworkspace/TaskHistory"));
+const PatentSearch = lazy(() => import("./pages/ipfortress/PatentSearch"));
+const MaintenanceAlerts = lazy(() => import("./pages/ipfortress/MaintenanceAlerts"));
 
 // Enhanced loading fallback component
 const PageLoadingFallback = () => (
@@ -180,6 +184,34 @@ const App = () => (
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <RevenueAnalytics />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/ai/quorum" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <DeliberationRooms />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/ai/task-history" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <TaskHistory />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/ip/patents" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <PatentSearch />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/ip/maintenance" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <MaintenanceAlerts />
               </Suspense>
             </ProtectedRoute>
           } />
