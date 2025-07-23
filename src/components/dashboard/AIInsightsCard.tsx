@@ -7,27 +7,27 @@ export function AIInsightsCard() {
   const insights = [
     {
       id: 1,
-      title: "Market Opportunity Detected",
-      description: "AI identified a 15% growth opportunity in the enterprise segment based on competitor analysis.",
-      confidence: 94,
+      title: "Strategic M&A Opportunity Identified",
+      description: "Machine learning analysis detected a potential acquisition target with 94% strategic alignment. Estimated synergies: $12.3M annually.",
+      confidence: 96,
       priority: "high",
-      timestamp: "2 hours ago",
+      timestamp: "12 minutes ago",
     },
     {
       id: 2,
-      title: "Patent Risk Assessment",
-      description: "Potential IP conflict detected with USPTO filing #12847. Recommend legal review.",
-      confidence: 87,
+      title: "Patent Landscape Alert",
+      description: "Competitive intelligence flagged 3 similar filings from Acme Corp. Recommend expedited review of claims 7-12 for potential conflicts.",
+      confidence: 89,
       priority: "medium",
-      timestamp: "5 hours ago",
+      timestamp: "2 hours ago",
     },
     {
       id: 3,
-      title: "Revenue Forecast Update",
-      description: "Q4 projections updated based on recent market trends. 8% increase expected.",
-      confidence: 91,
+      title: "Market Timing Signal Detected",
+      description: "Algorithmic trend analysis suggests optimal product launch window in Q2 2025. Market readiness score: 87/100.",
+      confidence: 92,
       priority: "low",
-      timestamp: "1 day ago",
+      timestamp: "4 hours ago",
     },
   ];
 
@@ -41,7 +41,7 @@ export function AIInsightsCard() {
   };
 
   return (
-    <Card className="glass border-glass-border/30">
+    <Card className="glass border-glass-border/30 hover:shadow-hover transition-all duration-300">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -61,7 +61,7 @@ export function AIInsightsCard() {
           {insights.map((insight) => (
             <div 
               key={insight.id} 
-              className="p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
+              className="p-4 rounded-xl bg-muted/20 hover:bg-muted/35 border border-transparent hover:border-primary/20 transition-all duration-300 cursor-pointer group relative overflow-hidden"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center space-x-2">

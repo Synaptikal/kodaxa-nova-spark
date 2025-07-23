@@ -17,15 +17,18 @@ function MetricCard({ title, value, change, changeType, icon: Icon }: MetricCard
                     changeType === "negative" ? ArrowDownIcon : TrendingUp;
 
   return (
-    <Card className="glass border-glass-border/30 hover:border-primary/20 transition-all duration-300 group">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-primary group-hover:text-primary-glow transition-colors" />
+    <Card className="glass border-glass-border/30 hover:border-primary/25 hover:shadow-hover transition-all duration-300 group relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
+        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-muted-foreground/90 transition-colors">{title}</CardTitle>
+        <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/15 transition-colors">
+          <Icon className="h-4 w-4 text-primary group-hover:scale-110 transition-transform duration-300" />
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        <div className={`flex items-center text-xs ${changeColor} mt-1`}>
-          <ChangeIcon className="h-3 w-3 mr-1" />
+      <CardContent className="relative z-10">
+        <div className="text-2xl font-bold text-foreground mb-1 group-hover:text-primary/90 transition-colors">{value}</div>
+        <div className={`flex items-center text-xs ${changeColor} font-medium`}>
+          <ChangeIcon className="h-3 w-3 mr-1.5" />
           {change}
         </div>
       </CardContent>
@@ -36,31 +39,31 @@ function MetricCard({ title, value, change, changeType, icon: Icon }: MetricCard
 export function MetricsGrid() {
   const metrics = [
     {
-      title: "Total Addressable Market",
-      value: "$2.4B",
-      change: "+12.5% from last quarter",
+      title: "Enterprise Pipeline Value",
+      value: "$47.8M",
+      change: "+23.7% from last quarter",
       changeType: "positive" as const,
       icon: Target,
     },
     {
-      title: "Annual Recurring Revenue",
-      value: "$14.2M",
-      change: "+8.1% from last month",
+      title: "Monthly Recurring Revenue",
+      value: "$3.2M",
+      change: "+12.4% from last month",
       changeType: "positive" as const,
       icon: DollarSign,
     },
     {
-      title: "Active Users",
-      value: "12,845",
-      change: "+4.3% from last week",
+      title: "Active Enterprise Clients",
+      value: "847",
+      change: "+156 new accounts",
       changeType: "positive" as const,
       icon: Users,
     },
     {
-      title: "Growth Rate",
-      value: "23.1%",
-      change: "-2.4% from target",
-      changeType: "negative" as const,
+      title: "AI Model Accuracy",
+      value: "94.7%",
+      change: "+2.1% optimization gain",
+      changeType: "positive" as const,
       icon: TrendingUp,
     },
   ];

@@ -27,47 +27,47 @@ export function RecentActivity() {
     {
       id: 1,
       type: "analysis",
-      title: "Market Analysis Completed",
-      description: "TAM/SAM/SOM analysis for Q4 2024 finished with 94% confidence",
-      timestamp: "10 minutes ago",
+      title: "Enterprise Market Analysis Completed",
+      description: "Total Addressable Market assessment for North American enterprise SaaS segment completed with 96% confidence. Identified $127M opportunity.",
+      timestamp: "8 minutes ago",
       status: "completed",
-      user: "John Doe",
+      user: "Dr. Sarah Chen",
     },
     {
       id: 2,
       type: "ai",
-      title: "AI Recommendation Generated",
-      description: "New growth opportunities identified in enterprise segment",
-      timestamp: "1 hour ago",
+      title: "Strategic AI Recommendation Generated",
+      description: "Machine learning models identified optimal market entry timing for Q2 2025 with 89% probability of success. Revenue projection: $24M.",
+      timestamp: "42 minutes ago",
       status: "info",
-      user: "AI Assistant",
+      user: "AI Strategic Advisor",
     },
     {
       id: 3,
       type: "ip",
-      title: "Patent Filed Successfully",
-      description: "USPTO application #12847 submitted for review",
-      timestamp: "3 hours ago",
+      title: "Patent Portfolio Update",
+      description: "USPTO application #US20240789456 approved for \"Predictive Analytics Engine\". Portfolio value increased by $3.2M.",
+      timestamp: "2 hours ago",
       status: "completed",
-      user: "Legal Team",
+      user: "Legal Counsel",
     },
     {
       id: 4,
       type: "user",
-      title: "New Team Member Added",
-      description: "Sarah Johnson joined the Analytics team",
-      timestamp: "5 hours ago",
+      title: "Executive Team Member Onboarded",
+      description: "Michael Rodriguez joined as VP of Strategic Operations. Security clearance approved, system access provisioned.",
+      timestamp: "4 hours ago",
       status: "info",
-      user: "Admin",
+      user: "Security Admin",
     },
     {
       id: 5,
       type: "system",
-      title: "Data Sync Warning",
-      description: "External API rate limit reached, retrying in 1 hour",
+      title: "Data Pipeline Health Alert",
+      description: "Bloomberg Terminal API experiencing intermittent latency. Failover to Refinitiv activated. Data integrity maintained at 99.7%.",
       timestamp: "6 hours ago",
       status: "warning",
-      user: "System",
+      user: "System Monitor",
     },
   ];
 
@@ -101,7 +101,7 @@ export function RecentActivity() {
   };
 
   return (
-    <Card className="glass border-glass-border/30">
+    <Card className="glass border-glass-border/30 hover:shadow-hover transition-all duration-300">
       <CardHeader>
         <CardTitle className="text-lg flex items-center">
           <Clock className="w-5 h-5 mr-2 text-primary" />
@@ -118,7 +118,7 @@ export function RecentActivity() {
             return (
               <div 
                 key={activity.id}
-                className="flex items-start space-x-3 p-3 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer group"
+                className="flex items-start space-x-3 p-4 rounded-xl hover:bg-muted/25 hover:border hover:border-primary/15 transition-all duration-300 cursor-pointer group relative"
               >
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center group-hover:bg-primary/20 transition-colors">

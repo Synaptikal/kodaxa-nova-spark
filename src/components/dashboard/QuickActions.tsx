@@ -31,50 +31,50 @@ export function QuickActions() {
   const actions = [
     {
       icon: BarChart3,
-      label: "New Analysis",
-      description: "Create market sizing or financial model",
+      label: "Market Intelligence",
+      description: "Generate TAM/SAM analysis",
       variant: "default" as const,
-      action: () => handleAction("New Analysis", "Redirecting to Business Foundry for analysis creation", "/foundry"),
+      action: () => handleAction("Market Analysis", "Launching comprehensive market intelligence suite", "/foundry"),
     },
     {
       icon: Brain,
-      label: "Ask AI",
-      description: "Get insights from your data",
+      label: "AI Strategy Session",
+      description: "Get predictive insights",
       variant: "secondary" as const,
-      action: () => handleAction("AI Workspace", "Opening AI Quorum for intelligent insights", "/ai"),
+      action: () => handleAction("AI Workspace", "Initializing strategic AI advisory session", "/ai"),
     },
     {
       icon: Shield,
-      label: "File Patent",
-      description: "Submit new IP application",
+      label: "IP Portfolio Review",
+      description: "Patent filing & analysis",
       variant: "outline" as const,
-      action: () => handleAction("IP Filing", "Opening IP Fortress for patent management", "/ip"),
+      action: () => handleAction("IP Management", "Accessing intellectual property fortress", "/ip"),
     },
     {
       icon: FileText,
-      label: "Generate Report",
-      description: "Export analytics to PDF",
+      label: "Executive Summary",
+      description: "Export board presentation",
       variant: "outline" as const,
-      action: () => handleAction("Report Generation", "Preparing comprehensive analytics report for download"),
+      action: () => handleAction("Report Generation", "Preparing C-suite analytics dashboard"),
     },
     {
       icon: Upload,
-      label: "Import Data",
-      description: "Upload financial or market data",
+      label: "Data Integration",
+      description: "Connect enterprise systems",
       variant: "ghost" as const,
-      action: () => handleAction("Data Import", "File upload dialog would open for data ingestion"),
+      action: () => handleAction("Data Pipeline", "Opening secure data integration portal"),
     },
     {
       icon: Settings,
-      label: "Configure",
-      description: "Manage integrations and settings",
+      label: "System Administration",
+      description: "Configure enterprise settings",
       variant: "ghost" as const,
-      action: () => handleAction("System Configuration", "Opening administrative settings panel", "/settings"),
+      action: () => handleAction("Admin Panel", "Accessing enterprise configuration center", "/settings"),
     },
   ];
 
   return (
-    <Card className="glass border-glass-border/30">
+    <Card className="glass border-glass-border/30 hover:shadow-hover transition-all duration-300">
       <CardHeader>
         <CardTitle className="text-lg flex items-center">
           <PlusCircle className="w-5 h-5 mr-2 text-primary" />
@@ -88,10 +88,10 @@ export function QuickActions() {
               key={index}
               variant={action.variant}
               onClick={action.action}
-              className={`h-auto p-4 flex flex-col items-start text-left transition-all duration-200 hover:scale-105 ${
+              className={`h-auto p-4 flex flex-col items-start text-left transition-all duration-300 hover:scale-[1.02] relative overflow-hidden group ${
                 action.variant === "default" 
-                  ? "bg-gradient-primary hover:shadow-glow" 
-                  : "hover:bg-muted/50"
+                  ? "bg-gradient-primary hover:shadow-glow border-primary/20" 
+                  : "hover:bg-muted/40 hover:border-primary/15 border border-transparent"
               }`}
             >
               <action.icon className="w-5 h-5 mb-2" />
