@@ -15,13 +15,16 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, 
   return (
     <Link 
       to={href}
-      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+      className={`px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-200 relative ${
         isActive 
-          ? 'bg-primary text-primary-foreground' 
-          : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+          ? 'text-primary bg-primary/8 border border-primary/20' 
+          : 'text-muted-foreground hover:text-foreground hover:bg-glass/50'
       }`}
     >
       {children}
+      {isActive && (
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
+      )}
     </Link>
   );
 };
@@ -30,23 +33,19 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
     <header className="glass border-b border-glass-border/30 sticky top-0 z-50 p-4">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">Kodaxa</h1>
-              <p className="text-xs text-muted-foreground">Orchestrator</p>
-            </div>
-          </div>
-          {title && <h1 className="text-2xl font-bold text-foreground">{title}</h1>}
+        <div className="flex items-center gap-6">
+          <Logo />
+          {title && (
+            <div className="h-6 w-px bg-border/50" />
+          )}
+          {title && <h1 className="text-xl font-semibold text-foreground tracking-tight">{title}</h1>}
         </div>
-        <nav className="flex items-center gap-6">
-          <NavLink href="/ai">🤖 AI Workspace</NavLink>
-          <NavLink href="/ip">🛡️ IP Fortress</NavLink>
-          <NavLink href="/foundry">📊 Business Foundry</NavLink>
-          <NavLink href="/admin">⚙️ Admin</NavLink>
+        <nav className="flex items-center gap-1">
+          <NavLink href="/ai">AI Workspace</NavLink>
+          <NavLink href="/ip">IP Fortress</NavLink>
+          <NavLink href="/foundry">Business Foundry</NavLink>
+          <NavLink href="/admin">Administration</NavLink>
+          <div className="h-6 w-px bg-border/50 mx-2" />
           <UserMenu />
         </nav>
       </div>

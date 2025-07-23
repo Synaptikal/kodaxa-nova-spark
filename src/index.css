@@ -2,72 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Kodaxa Orchestrator Design System - Dark HUD with Neon Accents & Glassmorphism */
+/* Enterprise Orchestration Platform - Professional Dark Architecture */
 
 @layer base {
   :root {
-    /* Core Dark Theme */
-    --background: 222 20% 8%;
-    --foreground: 210 40% 98%;
+    /* Core Enterprise Theme */
+    --background: 220 25% 3%;
+    --foreground: 210 20% 96%;
 
     /* Glass Cards */
-    --card: 222 20% 10%;
-    --card-foreground: 210 40% 95%;
-    --glass: 222 20% 12%;
-    --glass-border: 210 40% 20%;
+    --card: 220 25% 5%;
+    --card-foreground: 210 15% 92%;
+    --glass: 220 25% 7%;
+    --glass-border: 220 15% 15%;
 
     /* Popovers */
-    --popover: 222 20% 9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 25% 4%;
+    --popover-foreground: 210 20% 96%;
 
-    /* Neon Primary - Electric Blue */
-    --primary: 201 96% 32%;
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 201 96% 50%;
+    /* Professional Primary - Deep Azure */
+    --primary: 210 100% 56%;
+    --primary-foreground: 220 25% 3%;
+    --primary-glow: 210 100% 70%;
 
-    /* Secondary - Cool Gray */
-    --secondary: 222 20% 15%;
-    --secondary-foreground: 210 40% 90%;
+    /* Secondary - Platinum */
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 210 15% 85%;
 
     /* Muted Elements */
-    --muted: 222 20% 12%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 20% 8%;
+    --muted-foreground: 220 10% 55%;
 
-    /* Accent - Neon Purple */
-    --accent: 271 91% 65%;
-    --accent-foreground: 210 40% 98%;
-    --accent-glow: 271 91% 80%;
+    /* Accent - Executive Gold */
+    --accent: 45 90% 65%;
+    --accent-foreground: 220 25% 3%;
+    --accent-glow: 45 90% 75%;
 
-    /* Success - Neon Green */
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
-    --success-glow: 142 76% 50%;
+    /* Success - Corporate Green */
+    --success: 150 60% 50%;
+    --success-foreground: 220 25% 3%;
+    --success-glow: 150 60% 65%;
 
-    /* Warning - Neon Orange */
-    --warning: 32 95% 44%;
-    --warning-foreground: 210 40% 98%;
-    --warning-glow: 32 95% 60%;
+    /* Warning - Executive Amber */
+    --warning: 35 85% 60%;
+    --warning-foreground: 220 25% 3%;
+    --warning-glow: 35 85% 75%;
 
-    /* Destructive - Neon Red */
-    --destructive: 348 83% 47%;
-    --destructive-foreground: 210 40% 98%;
-    --destructive-glow: 348 83% 60%;
+    /* Critical - Professional Red */
+    --destructive: 350 75% 60%;
+    --destructive-foreground: 220 25% 3%;
+    --destructive-glow: 350 75% 75%;
 
     /* Borders & Inputs */
-    --border: 222 20% 18%;
-    --input: 222 20% 14%;
-    --ring: 201 96% 50%;
+    --border: 220 20% 12%;
+    --input: 220 25% 6%;
+    --ring: 210 100% 56%;
 
-    /* Gradients */
+    /* Professional Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
     --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(var(--success-glow)));
-    --gradient-glass: linear-gradient(135deg, hsl(var(--glass) / 0.7), hsl(var(--glass) / 0.3));
+    --gradient-glass: linear-gradient(135deg, hsl(var(--glass) / 0.85), hsl(var(--glass) / 0.4));
+    --gradient-executive: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--primary)) 100%);
 
-    /* Shadows & Glows */
-    --shadow-glow: 0 0 20px hsl(var(--primary-glow) / 0.3);
-    --shadow-glass: 0 8px 32px hsl(222 20% 2% / 0.4);
-    --shadow-accent: 0 0 20px hsl(var(--accent-glow) / 0.2);
+    /* Enterprise Shadows */
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.2);
+    --shadow-glass: 0 12px 40px hsl(220 25% 1% / 0.6);
+    --shadow-accent: 0 0 30px hsl(var(--accent) / 0.15);
+    --shadow-executive: 0 20px 80px hsl(220 25% 1% / 0.8);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -95,9 +97,9 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image: 
-      radial-gradient(circle at 20% 50%, hsl(var(--primary-glow) / 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, hsl(var(--accent-glow) / 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, hsl(var(--success-glow) / 0.03) 0%, transparent 50%);
+      radial-gradient(ellipse at 20% 10%, hsl(var(--primary) / 0.03) 0%, transparent 70%),
+      radial-gradient(ellipse at 80% 90%, hsl(var(--accent) / 0.02) 0%, transparent 70%),
+      linear-gradient(180deg, transparent 0%, hsl(var(--primary) / 0.01) 100%);
   }
 
   /* Glass morphism base */
