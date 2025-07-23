@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import BusinessFoundry from "./pages/BusinessFoundry";
 import MarketSizing from "./pages/foundry/MarketSizing";
 import FinancialProjections from "./pages/foundry/FinancialProjections";
+import CompetitiveAnalysis from "./pages/foundry/CompetitiveAnalysis";
+import CustomerSegmentation from "./pages/foundry/CustomerSegmentation";
 import AIWorkspace from "./pages/AIWorkspace";
 import IPFortress from "./pages/IPFortress";
 import AdminPanel from "./pages/AdminPanel";
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/foundry" element={<BusinessFoundry />} />
           <Route path="/foundry/market-sizing" element={<MarketSizing />} />
           <Route path="/foundry/financial-projections" element={<FinancialProjections />} />
+          <Route path="/foundry/competitive-analysis" element={<CompetitiveAnalysis />} />
+          <Route path="/foundry/customer-segmentation" element={<CustomerSegmentation />} />
           <Route path="/ai" element={<AIWorkspace />} />
           <Route path="/ip" element={<IPFortress />} />
           <Route path="/admin" element={<AdminPanel />} />
