@@ -1,0 +1,72 @@
+{
+  "name": "Kodaxa Orchestrator",
+  "short_name": "Kodaxa",
+  "description": "AI-powered business analytics, IP management, and strategic intelligence platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "finance"],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard view"
+    },
+    {
+      "src": "/screenshot-mobile.png", 
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI Workspace",
+      "short_name": "AI",
+      "description": "Access AI-powered analytics",
+      "url": "/ai",
+      "icons": [
+        {
+          "src": "/ai-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Business Foundry",
+      "short_name": "Foundry", 
+      "description": "Strategic business analysis",
+      "url": "/foundry",
+      "icons": [
+        {
+          "src": "/foundry-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
