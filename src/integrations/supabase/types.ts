@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      add_ons: {
+        Row: {
+          active: boolean | null
+          category: string | null
+          created_at: string
+          description: string | null
+          features: Json | null
+          id: string
+          name: string
+          price_monthly: number | null
+          stripe_price_id: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          name: string
+          price_monthly?: number | null
+          stripe_price_id?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          name?: string
+          price_monthly?: number | null
+          stripe_price_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -61,6 +97,158 @@ export type Database = {
           website?: string | null
         }
         Relationships: []
+      }
+      subscribers: {
+        Row: {
+          annual_billing: boolean | null
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_id: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          annual_billing?: boolean | null
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          annual_billing?: boolean | null
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_id?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_limits: {
+        Row: {
+          ai_processing_limit: number | null
+          api_calls_limit: number | null
+          business_analysis_limit: number | null
+          compliance_assessment_limit: number | null
+          features: Json | null
+          patent_search_limit: number | null
+          storage_limit_gb: number | null
+          team_members_limit: number | null
+          tier: string
+        }
+        Insert: {
+          ai_processing_limit?: number | null
+          api_calls_limit?: number | null
+          business_analysis_limit?: number | null
+          compliance_assessment_limit?: number | null
+          features?: Json | null
+          patent_search_limit?: number | null
+          storage_limit_gb?: number | null
+          team_members_limit?: number | null
+          tier: string
+        }
+        Update: {
+          ai_processing_limit?: number | null
+          api_calls_limit?: number | null
+          business_analysis_limit?: number | null
+          compliance_assessment_limit?: number | null
+          features?: Json | null
+          patent_search_limit?: number | null
+          storage_limit_gb?: number | null
+          team_members_limit?: number | null
+          tier?: string
+        }
+        Relationships: []
+      }
+      usage_tracking: {
+        Row: {
+          billing_period: string | null
+          cost_per_unit: number | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          quantity: number | null
+          service_type: string
+          total_cost: number | null
+          user_id: string | null
+        }
+        Insert: {
+          billing_period?: string | null
+          cost_per_unit?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          quantity?: number | null
+          service_type: string
+          total_cost?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          billing_period?: string | null
+          cost_per_unit?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          quantity?: number | null
+          service_type?: string
+          total_cost?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_add_ons: {
+        Row: {
+          active: boolean | null
+          add_on_id: string | null
+          created_at: string
+          id: string
+          stripe_subscription_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          add_on_id?: string | null
+          created_at?: string
+          id?: string
+          stripe_subscription_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          add_on_id?: string | null
+          created_at?: string
+          id?: string
+          stripe_subscription_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_add_ons_add_on_id_fkey"
+            columns: ["add_on_id"]
+            isOneToOne: false
+            referencedRelation: "add_ons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
