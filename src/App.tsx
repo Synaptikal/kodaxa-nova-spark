@@ -29,6 +29,8 @@ const AddOnMarketplace = lazy(() => import("./pages/AddOnMarketplace"));
 const RevenueAnalytics = lazy(() => import("./pages/RevenueAnalytics"));
 const DeliberationRooms = lazy(() => import("./pages/aiworkspace/DeliberationRooms"));
 const TaskHistory = lazy(() => import("./pages/aiworkspace/TaskHistory"));
+const ActiveTasks = lazy(() => import("./pages/aiworkspace/ActiveTasks"));
+const AgentSettings = lazy(() => import("./pages/aiworkspace/AgentSettings"));
 const PatentSearch = lazy(() => import("./pages/ipfortress/PatentSearch"));
 const MaintenanceAlerts = lazy(() => import("./pages/ipfortress/MaintenanceAlerts"));
 
@@ -194,10 +196,24 @@ const App = () => (
               </Suspense>
             </ProtectedRoute>
           } />
+          <Route path="/ai/tasks" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <ActiveTasks />
+              </Suspense>
+            </ProtectedRoute>
+          } />
           <Route path="/ai/task-history" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <TaskHistory />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/ai/settings" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <AgentSettings />
               </Suspense>
             </ProtectedRoute>
           } />

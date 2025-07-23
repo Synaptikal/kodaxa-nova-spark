@@ -50,7 +50,8 @@ const defaultMenuItems: MenuItem[] = [
 const aiWorkspaceMenuItems: MenuItem[] = [
   { label: 'AI Dashboard', href: '/ai', icon: Brain },
   { label: 'Quorum Discussion', href: '/ai/quorum', icon: Users },
-  { label: 'Task History', href: '/ai/tasks', icon: TrendingUp },
+  { label: 'Active Tasks', href: '/ai/tasks', icon: TrendingUp },
+  { label: 'Task History', href: '/ai/task-history', icon: BarChart3 },
   { label: 'Agent Settings', href: '/ai/settings', icon: Settings },
 ];
 
