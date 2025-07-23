@@ -63,7 +63,15 @@ const Auth = () => {
         } else {
           setError(error.message);
         }
-      } else if (data.user) {
+      } else if (data.user && !data.session) {
+        // Email confirmation required
+        toast({
+          title: "Check your email!",
+          description: "We've sent you a confirmation link. Please click it to activate your account.",
+        });
+        setError('Please check your email and click the confirmation link to activate your account, then try signing in.');
+      } else if (data.user && data.session) {
+        // User is immediately signed in (email confirmation disabled)
         toast({
           title: "Account created successfully!",
           description: "Welcome to your empire-building platform.",
@@ -301,6 +309,12 @@ const Auth = () => {
                 >
                   {isLogin ? 'Create an account' : 'Sign in instead'}
                 </Button>
+                
+                {isLogin && (
+                  <p className="text-xs text-muted-foreground mt-2">
+                    If you can't sign in, check your email for a confirmation link first.
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
