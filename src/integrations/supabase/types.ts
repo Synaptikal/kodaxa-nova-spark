@@ -50,6 +50,54 @@ export type Database = {
         }
         Relationships: []
       }
+      enterprise_quotes: {
+        Row: {
+          company_name: string
+          company_size: number
+          contact_email: string
+          contact_name: string
+          created_at: string
+          custom_requirements: string | null
+          estimated_value: number
+          id: string
+          implementation_timeline: string
+          quote_total: number
+          status: string | null
+          use_cases: string
+          user_id: string | null
+        }
+        Insert: {
+          company_name: string
+          company_size: number
+          contact_email: string
+          contact_name: string
+          created_at?: string
+          custom_requirements?: string | null
+          estimated_value: number
+          id?: string
+          implementation_timeline: string
+          quote_total: number
+          status?: string | null
+          use_cases: string
+          user_id?: string | null
+        }
+        Update: {
+          company_name?: string
+          company_size?: number
+          contact_email?: string
+          contact_name?: string
+          created_at?: string
+          custom_requirements?: string | null
+          estimated_value?: number
+          id?: string
+          implementation_timeline?: string
+          quote_total?: number
+          status?: string | null
+          use_cases?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
