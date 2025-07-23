@@ -224,6 +224,13 @@ const App = () => (
               </Suspense>
             </ProtectedRoute>
           } />
+          <Route path="/ip/search" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <PatentSearch />
+              </Suspense>
+            </ProtectedRoute>
+          } />
           <Route path="/ip/maintenance" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
