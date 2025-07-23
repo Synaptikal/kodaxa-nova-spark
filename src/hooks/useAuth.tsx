@@ -19,13 +19,23 @@ interface Profile {
   updated_at: string;
 }
 
+interface SubscriptionData {
+  subscribed: boolean;
+  subscription_tier: string | null;
+  subscription_status: string;
+  subscription_end: string | null;
+  annual_billing: boolean;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  subscription: SubscriptionData | null;
   loading: boolean;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
+  checkSubscription: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,6 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -68,6 +79,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const checkSubscription = async () => {
+    if (!session) return;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('check-subscription', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (error) {
+        console.error('Subscription check error:', error);
+        return;
+      }
+
+      setSubscription(data);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -76,12 +108,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user profile
+          // Fetch user profile and subscription
           setTimeout(() => {
             fetchProfile(session.user.id);
+            checkSubscription();
           }, 0);
         } else {
           setProfile(null);
+          setSubscription(null);
         }
 
         setLoading(false);
@@ -95,6 +129,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (session?.user) {
         fetchProfile(session.user.id);
+        checkSubscription();
       }
       
       setLoading(false);
@@ -112,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(null);
         setSession(null);
         setProfile(null);
+        setSubscription(null);
         navigate('/auth');
       }
     } catch (error) {
@@ -146,9 +182,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     user,
     session,
     profile,
+    subscription,
     loading,
     signOut,
     updateProfile,
+    checkSubscription,
   };
 
   return (

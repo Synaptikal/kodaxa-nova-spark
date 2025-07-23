@@ -16,6 +16,8 @@ import IPFortress from "./pages/IPFortress";
 import AdminPanel from "./pages/AdminPanel";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Pricing from "./pages/Pricing";
+import Subscription from "./pages/Subscription";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -98,6 +100,21 @@ const App = () => (
         <Route path="/settings" element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        } />
+        <Route path="/pricing" element={
+          <ProtectedRoute>
+            <Pricing />
+          </ProtectedRoute>
+        } />
+        <Route path="/subscription" element={
+          <ProtectedRoute>
+            <Subscription />
+          </ProtectedRoute>
+        } />
+        <Route path="/subscription-success" element={
+          <ProtectedRoute>
+            <Subscription />
           </ProtectedRoute>
         } />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
