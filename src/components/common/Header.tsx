@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Logo } from './Logo';
 import { UserMenu } from './UserMenu';
-import { Zap } from 'lucide-react';
+import { usePreloadRoutes } from '@/hooks/usePreloadRoutes';
 
 interface HeaderProps {
   title?: string;
@@ -10,11 +10,13 @@ interface HeaderProps {
 
 const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => {
   const location = useLocation();
+  const { preloadOnHover } = usePreloadRoutes();
   const isActive = location.pathname === href || location.pathname.startsWith(href + '/');
   
   return (
     <Link 
       to={href}
+      onMouseEnter={() => preloadOnHover(href)}
       className={`px-4 py-2.5 rounded-md text-sm font-medium transition-all duration-200 relative ${
         isActive 
           ? 'text-primary bg-primary/8 border border-primary/20' 

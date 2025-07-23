@@ -145,4 +145,39 @@
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--primary) / 0.7);
   }
+
+  /* Performance optimizations */
+  * {
+    box-sizing: border-box;
+  }
+
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent layout shifts */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Optimize text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Hardware acceleration for animations */
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
 }
