@@ -59,7 +59,7 @@ export const Breadcrumbs: React.FC = () => {
   });
 
   return (
-    <nav className="flex items-center space-x-1 text-sm text-muted-foreground mb-4">
+    <nav className="flex items-center flex-wrap text-sm text-muted-foreground mb-4">
       {breadcrumbs.map((item, index) => {
         const Icon = item.icon;
         const isLast = index === breadcrumbs.length - 1;
