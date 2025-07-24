@@ -213,6 +213,57 @@ export default function Profile() {
               </CardContent>
             </Card>
 
+            {/* AI Agent Preferences */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bot className="w-5 h-5 mr-2 text-primary" />
+                  AI Agent Preferences
+                </CardTitle>
+                <CardDescription>
+                  Choose your preferred AI assistant for the sidebar chat
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="preferredAgent">Default AI Agent</Label>
+                  <Select
+                    value={profile?.preferred_agent || 'hf-blenderbot'}
+                    onValueChange={handleAgentChange}
+                  >
+                    <SelectTrigger className="glass border-glass-border/30">
+                      <SelectValue placeholder="Select your preferred AI agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableAgents.map((agent) => (
+                        <SelectItem key={agent.id} value={agent.id}>
+                          <div>
+                            <p className="font-medium">{agent.name}</p>
+                            <p className="text-xs text-muted-foreground">{agent.description}</p>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    This agent will be selected by default in your AI chat sidebar. You can change it anytime.
+                  </p>
+                </div>
+
+                {!subscription?.subscribed && (
+                  <div className="p-3 rounded-lg bg-muted/30 border border-muted">
+                    <p className="text-sm font-medium mb-1">Upgrade for Premium Agents</p>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      Access GPT-4, Claude 3, Gemini Pro and other advanced AI models
+                    </p>
+                    <Button variant="outline" size="sm">
+                      View Pricing Plans
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Notification Preferences */}
             <Card className="glass border-glass-border/30">
               <CardHeader>
