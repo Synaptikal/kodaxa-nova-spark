@@ -11,11 +11,11 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { 
-  ChevronDown, 
-  Brain, 
-  MessageSquare, 
-  History, 
+import {
+  ChevronDown,
+  Brain,
+  MessageSquare,
+  History,
   Settings,
   Shield,
   Search,
@@ -26,7 +26,12 @@ import {
   Users,
   Database,
   Activity,
-  Key
+  Key,
+  ShoppingCart,
+  DollarSign,
+  Monitor,
+  CreditCard,
+  Package
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -55,7 +60,8 @@ const navigationMenus = {
     href: '/ip',
     items: [
       { href: '/ip/search', label: 'Patent Search', icon: Search },
-      { href: '/ip/maintenance', label: 'Maintenance Alerts', icon: AlertTriangle }
+      { href: '/ip/maintenance', label: 'Maintenance Alerts', icon: AlertTriangle },
+      { href: '/ip/patents', label: 'Patent Portfolio', icon: Shield }
     ]
   },
   forge: {
@@ -68,11 +74,21 @@ const navigationMenus = {
       { href: '/forge/customer-segmentation', label: 'Customer Segmentation', icon: Users }
     ]
   },
+  marketplace: {
+    label: 'Marketplace',
+    href: '/add-ons',
+    items: [
+      { href: '/add-ons', label: 'Browse Add-ons', icon: ShoppingCart },
+      { href: '/pricing', label: 'Pricing Plans', icon: CreditCard },
+      { href: '/subscription', label: 'My Subscription', icon: Package }
+    ]
+  },
   admin: {
     label: 'Administration',
     href: '/admin',
     items: [
       { href: '/admin', label: 'System Overview', icon: Database },
+      { href: '/analytics', label: 'Revenue Analytics', icon: Monitor },
       { href: '/settings', label: 'Settings', icon: Settings },
       { href: '/profile', label: 'Profile', icon: Users }
     ]
@@ -171,27 +187,33 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
         </div>
         <nav className="flex items-center gap-1">
           {/* AI Workspace */}
-          <NavDropdown 
-            menu={navigationMenus.ai} 
-            isActive={location.pathname.startsWith('/ai')} 
+          <NavDropdown
+            menu={navigationMenus.ai}
+            isActive={location.pathname.startsWith('/ai')}
           />
-          
+
           {/* IP Fortress */}
-          <NavDropdown 
-            menu={navigationMenus.ip} 
-            isActive={location.pathname.startsWith('/ip')} 
+          <NavDropdown
+            menu={navigationMenus.ip}
+            isActive={location.pathname.startsWith('/ip')}
           />
-          
+
           {/* Capital Forge */}
-          <NavDropdown 
-            menu={navigationMenus.forge} 
-            isActive={location.pathname.startsWith('/forge')} 
+          <NavDropdown
+            menu={navigationMenus.forge}
+            isActive={location.pathname.startsWith('/forge')}
           />
-          
+
+          {/* Marketplace */}
+          <NavDropdown
+            menu={navigationMenus.marketplace}
+            isActive={location.pathname.startsWith('/add-ons') || location.pathname.startsWith('/pricing') || location.pathname.startsWith('/subscription')}
+          />
+
           {/* Administration */}
-          <NavDropdown 
-            menu={navigationMenus.admin} 
-            isActive={location.pathname.startsWith('/admin') || location.pathname.startsWith('/settings') || location.pathname.startsWith('/profile')} 
+          <NavDropdown
+            menu={navigationMenus.admin}
+            isActive={location.pathname.startsWith('/admin') || location.pathname.startsWith('/settings') || location.pathname.startsWith('/profile') || location.pathname.startsWith('/analytics')}
           />
 
           <div className="h-6 w-px bg-border/50 mx-2" />
