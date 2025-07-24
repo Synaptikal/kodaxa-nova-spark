@@ -63,12 +63,6 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  // Defensive check for React hooks availability
-  if (!useState) {
-    console.error('React useState hook is not available. This usually indicates a React import or version issue.');
-    throw new Error('React hooks are not available');
-  }
-
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
