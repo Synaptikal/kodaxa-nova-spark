@@ -56,6 +56,11 @@ const App = () => (
               <LandingPage />
             </Suspense>
           } />
+          <Route path="/home" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={
             <ProtectedRoute>
