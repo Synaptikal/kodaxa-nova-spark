@@ -65,11 +65,11 @@ export const Breadcrumbs: React.FC = () => {
         const isLast = index === breadcrumbs.length - 1;
 
         return (
-          <React.Fragment key={index}>
+          <div key={index} className="flex items-center">
             {index > 0 && (
-              <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+              <ChevronRight className="w-4 h-4 text-muted-foreground/50 mx-1" />
             )}
-            
+
             {item.href ? (
               <Link
                 to={item.href}
@@ -84,7 +84,7 @@ export const Breadcrumbs: React.FC = () => {
                 {item.label}
               </span>
             )}
-          </React.Fragment>
+          </div>
         );
       })}
     </nav>
