@@ -266,6 +266,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
+    // Test database connection on initialization
+    testDatabaseConnection();
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -275,15 +278,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user profile, roles, and subscription with error handling
-          try {
-            await Promise.allSettled([
-              fetchProfile(session.user.id),
-              fetchUserRoles(session.user.id),
-              checkSubscription()
-            ]);
-          } catch (error) {
-            console.error('Error during user data fetch:', error);
+          // Test database connection before fetching user data
+          const dbConnected = await testDatabaseConnection();
+
+          if (dbConnected) {
+            // Fetch user profile, roles, and subscription with error handling
+            try {
+              await Promise.allSettled([
+                fetchProfile(session.user.id),
+                fetchUserRoles(session.user.id),
+                checkSubscription()
+              ]);
+            } catch (error) {
+              console.error('Error during user data fetch:', error);
+            }
+          } else {
+            console.warn('Database connection failed, using default user state');
           }
         } else {
           // Clear user data on logout
