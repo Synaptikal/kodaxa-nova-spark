@@ -186,38 +186,53 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
           {title && <h1 className="text-xl font-semibold text-foreground tracking-tight">{title}</h1>}
         </div>
         <nav className="flex items-center gap-1">
-          {/* AI Workspace */}
-          <NavDropdown
-            menu={navigationMenus.ai}
-            isActive={location.pathname.startsWith('/ai')}
-          />
+          {/* Show marketing links on landing page */}
+          {location.pathname === '/landing' ? (
+            <>
+              <SimpleNavLink href="#features">Features</SimpleNavLink>
+              <SimpleNavLink href="#pricing">Pricing</SimpleNavLink>
+              <SimpleNavLink href="#testimonials">Testimonials</SimpleNavLink>
+              <div className="flex items-center gap-2 ml-4">
+                <Button variant="outline" onClick={() => navigate('/auth')}>Sign In</Button>
+                <Button onClick={() => navigate('/auth')}>Start Trial</Button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* AI Workspace */}
+              <NavDropdown
+                menu={navigationMenus.ai}
+                isActive={location.pathname.startsWith('/ai')}
+              />
 
-          {/* IP Fortress */}
-          <NavDropdown
-            menu={navigationMenus.ip}
-            isActive={location.pathname.startsWith('/ip')}
-          />
+              {/* IP Fortress */}
+              <NavDropdown
+                menu={navigationMenus.ip}
+                isActive={location.pathname.startsWith('/ip')}
+              />
 
-          {/* Capital Forge */}
-          <NavDropdown
-            menu={navigationMenus.forge}
-            isActive={location.pathname.startsWith('/forge')}
-          />
+              {/* Capital Forge */}
+              <NavDropdown
+                menu={navigationMenus.forge}
+                isActive={location.pathname.startsWith('/forge')}
+              />
 
-          {/* Marketplace */}
-          <NavDropdown
-            menu={navigationMenus.marketplace}
-            isActive={location.pathname.startsWith('/add-ons') || location.pathname.startsWith('/pricing') || location.pathname.startsWith('/subscription')}
-          />
+              {/* Marketplace */}
+              <NavDropdown
+                menu={navigationMenus.marketplace}
+                isActive={location.pathname.startsWith('/add-ons') || location.pathname.startsWith('/pricing') || location.pathname.startsWith('/subscription')}
+              />
 
-          {/* Administration */}
-          <NavDropdown
-            menu={navigationMenus.admin}
-            isActive={location.pathname.startsWith('/admin') || location.pathname.startsWith('/settings') || location.pathname.startsWith('/profile') || location.pathname.startsWith('/analytics')}
-          />
+              {/* Administration */}
+              <NavDropdown
+                menu={navigationMenus.admin}
+                isActive={location.pathname.startsWith('/admin') || location.pathname.startsWith('/settings') || location.pathname.startsWith('/profile') || location.pathname.startsWith('/analytics')}
+              />
 
-          <div className="h-6 w-px bg-border/50 mx-2" />
-          <UserMenu />
+              <div className="h-6 w-px bg-border/50 mx-2" />
+              <UserMenu />
+            </>
+          )}
         </nav>
       </div>
     </header>
