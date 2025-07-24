@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User, Settings, LogOut, Building } from 'lucide-react';
+import { User, Settings, LogOut, Building, ShoppingCart, CreditCard } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 export const UserMenu: React.FC = () => {
@@ -81,6 +81,18 @@ export const UserMenu: React.FC = () => {
             <span>Company</span>
           </DropdownMenuItem>
         )}
+        <DropdownMenuItem asChild>
+          <Link to="/add-ons" className="flex items-center">
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            <span>Marketplace</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/subscription" className="flex items-center">
+            <CreditCard className="mr-2 h-4 w-4" />
+            <span>Subscription</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/settings" className="flex items-center">
             <Settings className="mr-2 h-4 w-4" />
