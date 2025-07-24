@@ -5,7 +5,7 @@ import { QuickActions } from "@/components/dashboard/QuickActions";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { OptimizedImage } from "@/components/common/OptimizedImage";
 import { usePreloadRoutes } from "@/hooks/usePreloadRoutes";
-import heroImage from "@/assets/hero-dashboard.jpg";
+const heroImage = "/hero-dashboard.svg";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Play, ArrowRight, Activity } from "lucide-react";
