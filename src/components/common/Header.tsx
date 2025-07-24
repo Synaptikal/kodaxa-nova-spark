@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from './Logo';
 import { UserMenu } from './UserMenu';
 import { usePreloadRoutes } from '@/hooks/usePreloadRoutes';
@@ -174,6 +174,7 @@ const SimpleNavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ 
 
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <header className="glass border-b border-glass-border/30 sticky top-0 z-50 p-4">
