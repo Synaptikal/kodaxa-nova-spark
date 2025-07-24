@@ -1,8 +1,5 @@
 import React from 'react';
-import { Header } from './Header';
-import { AIChatSidebar } from './AIChatSidebar';
-import { Breadcrumbs } from './Breadcrumbs';
-import { FloatingMarketplaceButton } from './FloatingMarketplaceButton';
+import { ResponsiveLayout } from '../layout/ResponsiveLayout';
 import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
 
 interface LayoutProps {
@@ -14,22 +11,12 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({
   children,
-  title,
-  showSidebar = true,
-  showBreadcrumbs = true
+  title
 }) => {
   useKeyboardNavigation();
   return (
-    <div className="min-h-screen bg-background">
-      <Header title={title} />
-      <div className="flex">
-        {showSidebar && <AIChatSidebar />}
-        <main className="flex-1 p-6">
-          {showBreadcrumbs && <Breadcrumbs />}
-          {children}
-        </main>
-      </div>
-      <FloatingMarketplaceButton />
-    </div>
+    <ResponsiveLayout title={title}>
+      {children}
+    </ResponsiveLayout>
   );
 };

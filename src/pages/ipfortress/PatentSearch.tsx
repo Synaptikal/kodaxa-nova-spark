@@ -11,7 +11,7 @@ import {
   Search, Filter, Download, Eye, BookOpen, Clock, MapPin, User, 
   TrendingUp, BarChart3, PieChart, Activity, Zap, Shield, Globe
 } from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 interface Patent {
   id: string;

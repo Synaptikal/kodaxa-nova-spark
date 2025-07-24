@@ -34,7 +34,6 @@ import {
   CheckCircle,
   RefreshCw,
   UserCheck,
-  TrendingFlat,
   CreditCard,
   ShoppingCart,
   Mail,

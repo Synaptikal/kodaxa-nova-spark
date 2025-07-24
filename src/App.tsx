@@ -35,6 +35,10 @@ const AgentSettings = lazy(() => import("./pages/aiworkspace/AgentSettings"));
 const PatentSearch = lazy(() => import("./pages/ipfortress/PatentSearch"));
 const PatentPortfolio = lazy(() => import("./pages/ipfortress/PatentPortfolio"));
 const MaintenanceAlerts = lazy(() => import("./pages/ipfortress/MaintenanceAlerts"));
+const QuantumWorkspace = lazy(() => import("./pages/QuantumWorkspace"));
+const ComplianceSentinel = lazy(() => import("./pages/ComplianceSentinel"));
+const FileManager = lazy(() => import("./pages/FileManager"));
+const HistoryLogs = lazy(() => import("./pages/HistoryLogs"));
 
 // Enhanced loading fallback component
 const PageLoadingFallback = () => (
@@ -255,6 +259,34 @@ const App = () => (
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <MaintenanceAlerts />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/quantum" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <QuantumWorkspace />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/compliance" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <ComplianceSentinel />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/files" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <FileManager />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/history" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <HistoryLogs />
               </Suspense>
             </ProtectedRoute>
           } />
