@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import { AIChatSidebar } from './AIChatSidebar';
 import { Breadcrumbs } from './Breadcrumbs';
 import { FloatingMarketplaceButton } from './FloatingMarketplaceButton';
 import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
