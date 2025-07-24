@@ -27,13 +27,15 @@ const AppWithMonitoring = () => {
 };
 
 createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
-    <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <AppWithMonitoring />
-        </QueryClientProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
+  <React.StrictMode>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <AppWithMonitoring />
+          </QueryClientProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
+  </React.StrictMode>
 );
