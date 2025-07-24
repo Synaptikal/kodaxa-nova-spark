@@ -19,7 +19,7 @@ const pathLabels: Record<string, string> = {
   'ip': 'IP Fortress',
   'ip-fortress': 'IP Fortress',
   'search': 'Patent Search',
-  'patents': 'Patent Search',
+  'patents': 'Patent Portfolio',
   'maintenance': 'Maintenance Alerts',
   'forge': 'Capital Forge',
   'capital-forge': 'Capital Forge',
@@ -29,10 +29,13 @@ const pathLabels: Record<string, string> = {
   'customer-segmentation': 'Customer Segmentation',
   'admin': 'Administration',
   'profile': 'Profile',
-  'pricing': 'Pricing',
-  'subscription': 'Subscription',
-  'add-ons': 'Add-ons',
-  'analytics': 'Analytics'
+  'pricing': 'Pricing Plans',
+  'subscription': 'My Subscription',
+  'subscription-success': 'Subscription Success',
+  'add-ons': 'Marketplace',
+  'analytics': 'Revenue Analytics',
+  'auth': 'Authentication',
+  'enterprise-sales': 'Enterprise Sales'
 };
 
 export const Breadcrumbs: React.FC = () => {
