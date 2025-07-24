@@ -34,7 +34,7 @@ import {
   Download
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import circuitPattern from "@/assets/circuit-pattern.jpg";
+const circuitPattern = "/circuit-pattern.svg";
 
 export default function Settings() {
   const [isLoaded, setIsLoaded] = useState(false);
