@@ -48,7 +48,7 @@ const SidebarItem: React.FC<MenuItem & { isActive?: boolean }> = ({
 };
 
 const defaultMenuItems: MenuItem[] = [
-  { label: 'Dashboard', href: '/', icon: Home },
+  { label: 'Dashboard', href: '/dashboard', icon: Home },
   { label: 'AI Workspace', href: '/ai', icon: Brain },
   { label: 'IP Fortress', href: '/ip', icon: Shield },
   { label: 'Capital Forge', href: '/forge', icon: BarChart3 },
