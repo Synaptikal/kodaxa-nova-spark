@@ -243,17 +243,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id ? 'User logged in' : 'User logged out');
+
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user profile, roles, and subscription
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-            fetchUserRoles(session.user.id);
-            checkSubscription();
-          }, 0);
+          // Fetch user profile, roles, and subscription with error handling
+          try {
+            await Promise.allSettled([
+              fetchProfile(session.user.id),
+              fetchUserRoles(session.user.id),
+              checkSubscription()
+            ]);
+          } catch (error) {
+            console.error('Error during user data fetch:', error);
+          }
         } else {
+          // Clear user data on logout
           setProfile(null);
           setUserRoles([]);
           setSubscription(null);
@@ -264,16 +271,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+
+      console.log('Initial session check:', session?.user?.id ? 'User found' : 'No user');
+
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchUserRoles(session.user.id);
-        checkSubscription();
+        try {
+          await Promise.allSettled([
+            fetchProfile(session.user.id),
+            fetchUserRoles(session.user.id),
+            checkSubscription()
+          ]);
+        } catch (error) {
+          console.error('Error during initial user data fetch:', error);
+        }
       }
-      
+
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Error in getSession:', error);
       setLoading(false);
     });
 
