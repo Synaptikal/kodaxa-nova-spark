@@ -33,6 +33,7 @@ const TaskHistory = lazy(() => import("./pages/aiworkspace/TaskHistory"));
 const ActiveTasks = lazy(() => import("./pages/aiworkspace/ActiveTasks"));
 const AgentSettings = lazy(() => import("./pages/aiworkspace/AgentSettings"));
 const PatentSearch = lazy(() => import("./pages/ipfortress/PatentSearch"));
+const PatentPortfolio = lazy(() => import("./pages/ipfortress/PatentPortfolio"));
 const MaintenanceAlerts = lazy(() => import("./pages/ipfortress/MaintenanceAlerts"));
 
 // Enhanced loading fallback component
@@ -239,7 +240,7 @@ const App = () => (
           <Route path="/ip/patents" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
-                <PatentSearch />
+                <PatentPortfolio />
               </Suspense>
             </ProtectedRoute>
           } />
