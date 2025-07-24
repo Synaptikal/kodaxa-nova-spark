@@ -7,6 +7,7 @@ import { usePerformanceMonitoring } from '@/hooks/usePerformanceMonitoring'
 import App from './App.tsx'
 import './index.css'
 import { ErrorBoundary } from './components/common/ErrorBoundary'
+import { SimpleWrapper } from './components/SimpleWrapper'
 
 // Enhanced QueryClient with optimized settings
 const queryClient = new QueryClient({
@@ -37,14 +38,16 @@ if (!root) {
 const reactRoot = createRoot(root);
 reactRoot.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <AppWithMonitoring />
-          </QueryClientProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <SimpleWrapper>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <AppWithMonitoring />
+            </QueryClientProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </SimpleWrapper>
   </React.StrictMode>
 );
