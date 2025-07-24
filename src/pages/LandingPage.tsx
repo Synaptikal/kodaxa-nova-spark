@@ -496,7 +496,7 @@ const LandingPage = () => {
                   <Play className="w-16 h-16 text-primary mx-auto mb-4" />
                   <h3 className="text-xl font-semibold mb-2">Interactive Platform Demo</h3>
                   <p className="text-muted-foreground mb-4">See KODAXA in action with our comprehensive walkthrough</p>
-                  <Button onClick={() => navigate('/auth')}>
+                  <Button onClick={() => { setShowDemo(false); navigate('/auth'); }}>
                     Start Your Free Trial Instead
                   </Button>
                 </div>
