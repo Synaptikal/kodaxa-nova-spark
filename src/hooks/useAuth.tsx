@@ -16,6 +16,7 @@ interface Profile {
   phone: string | null;
   website: string | null;
   linkedin_url: string | null;
+  preferred_agent: string | null;
   created_at: string;
   updated_at: string;
 }
