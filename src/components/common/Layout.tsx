@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { Breadcrumbs } from './Breadcrumbs';
 import { FloatingMarketplaceButton } from './FloatingMarketplaceButton';
+import { useKeyboardNavigation } from '@/hooks/useKeyboardNavigation';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export const Layout: React.FC<LayoutProps> = ({
   showSidebar = true,
   showBreadcrumbs = true
 }) => {
+  useKeyboardNavigation();
   return (
     <div className="min-h-screen bg-background">
       <Header title={title} />
