@@ -13,7 +13,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/auth');
+      // Only redirect to auth if user is trying to access protected routes
+      // Don't interfere with public routes like landing page
+      navigate('/auth', { replace: true });
     }
   }, [user, loading, navigate]);
 
