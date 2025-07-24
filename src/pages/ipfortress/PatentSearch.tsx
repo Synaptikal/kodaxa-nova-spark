@@ -1,300 +1,503 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/common/Layout';
-import { GlassCard } from '@/components/common/GlassCard';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, FileText, Shield, AlertTriangle, Calendar, Lightbulb, Database, Eye, Download, Upload } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Search, Filter, Download, Eye, BookOpen, Clock, MapPin, User, 
+  TrendingUp, BarChart3, PieChart, Activity, Zap, Shield, Globe
+} from 'lucide-react';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 interface Patent {
   id: string;
   title: string;
   patentNumber: string;
-  status: 'active' | 'pending' | 'expired';
-  expiryDate: string;
-  inventors: string[];
-  description: string;
-  claims?: string[];
-  classifications?: string[];
-}
-
-interface PriorArtResult {
-  id: string;
-  title: string;
-  source: string;
-  relevanceScore: number;
+  inventor: string;
+  assignee: string;
+  filingDate: string;
   publicationDate: string;
-  summary: string;
-  type: 'patent' | 'publication' | 'article';
+  status: 'granted' | 'pending' | 'expired' | 'abandoned';
+  abstract: string;
+  classification: string;
+  citationCount: number;
+  relevanceScore: number;
+  legalStatus: string;
+  country: string;
 }
 
-const mockPatents: Patent[] = [
-  {
-    id: '1',
-    title: 'AI-Powered Document Analysis System',
-    patentNumber: 'US11234567B2',
-    status: 'active',
-    expiryDate: '2035-03-15',
-    inventors: ['Dr. Smith', 'J. Johnson'],
-    description: 'Machine learning system for automated document classification and analysis',
-    claims: ['Automated text classification using neural networks', 'Real-time document processing'],
-    classifications: ['G06F40/20', 'G06N3/04']
-  },
-  {
-    id: '2', 
-    title: 'Blockchain-Based Identity Verification',
-    patentNumber: 'US11234568B2',
-    status: 'pending',
-    expiryDate: '2036-01-20',
-    inventors: ['A. Wilson', 'M. Chen'],
-    description: 'Decentralized identity verification using blockchain technology',
-    claims: ['Distributed identity verification system', 'Cryptographic proof mechanisms'],
-    classifications: ['H04L9/32', 'G06F21/60']
-  }
-];
+interface SearchAnalytics {
+  totalResults: number;
+  avgRelevance: number;
+  topAssignees: { name: string; count: number }[];
+  statusDistribution: { status: string; count: number; color: string }[];
+  filingTrends: { year: string; count: number; grants: number }[];
+  citationTrends: { patent: string; citations: number }[];
+  geographicDistribution: { country: string; count: number }[];
+}
 
-const mockPriorArt: PriorArtResult[] = [
-  {
-    id: '1',
-    title: 'Machine Learning Approaches to Document Classification',
-    source: 'IEEE Transactions on Pattern Analysis',
-    relevanceScore: 95,
-    publicationDate: '2019-03-15',
-    summary: 'Comprehensive study on neural network architectures for automated document classification...',
-    type: 'publication'
-  },
-  {
-    id: '2',
-    title: 'Natural Language Processing in Document Analysis',
-    source: 'Nature Machine Intelligence',
-    relevanceScore: 88,
-    publicationDate: '2020-08-22',
-    summary: 'Research on advanced NLP techniques for document understanding and categorization...',
-    type: 'article'
-  },
-  {
-    id: '3',
-    title: 'Automated Text Analysis System',
-    source: 'US10987654B1',
-    relevanceScore: 92,
-    publicationDate: '2018-11-10',
-    summary: 'Patent describing automated text processing and classification methodologies...',
-    type: 'patent'
-  }
-];
-
-export default function PatentSearch() {
+const PatentSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [priorArtQuery, setPriorArtQuery] = useState('');
-  const [selectedDatabase, setSelectedDatabase] = useState('all');
-  const [patents] = useState<Patent[]>(mockPatents);
-  const [priorArtResults] = useState<PriorArtResult[]>(mockPriorArt);
+  const [patents, setPatents] = useState<Patent[]>([]);
+  const [analytics, setAnalytics] = useState<SearchAnalytics | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedPatent, setSelectedPatent] = useState<Patent | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('relevance');
+  const { toast } = useToast();
+
+  // Mock data for demonstration
+  const mockPatents: Patent[] = [
+    {
+      id: '1',
+      title: 'Artificial Intelligence-Based Business Intelligence System',
+      patentNumber: 'US11234567B2',
+      inventor: 'John Smith, Jane Doe',
+      assignee: 'TechCorp Industries',
+      filingDate: '2022-03-15',
+      publicationDate: '2023-09-20',
+      status: 'granted',
+      abstract: 'A system and method for automated business intelligence using artificial intelligence and machine learning algorithms to analyze enterprise data...',
+      classification: 'G06F 16/00',
+      citationCount: 45,
+      relevanceScore: 95,
+      legalStatus: 'Active',
+      country: 'US'
+    },
+    {
+      id: '2',
+      title: 'Blockchain-Based Supply Chain Management',
+      patentNumber: 'US11567890B1',
+      inventor: 'Alice Johnson',
+      assignee: 'BlockChain Solutions Inc.',
+      filingDate: '2021-11-08',
+      publicationDate: '2023-05-15',
+      status: 'granted',
+      abstract: 'A distributed ledger system for tracking and managing supply chain operations with immutable records...',
+      classification: 'H04L 9/00',
+      citationCount: 38,
+      relevanceScore: 87,
+      legalStatus: 'Active',
+      country: 'US'
+    },
+    {
+      id: '3',
+      title: 'Quantum Computing Algorithm for Financial Modeling',
+      patentNumber: 'US20230789012A1',
+      inventor: 'Robert Chen, Maria Garcia',
+      assignee: 'QuantumFinance Corp',
+      filingDate: '2023-01-20',
+      publicationDate: '2023-10-25',
+      status: 'pending',
+      abstract: 'Novel quantum algorithms for complex financial modeling and risk assessment in real-time trading systems...',
+      classification: 'G06N 10/00',
+      citationCount: 12,
+      relevanceScore: 92,
+      legalStatus: 'Under Review',
+      country: 'US'
+    }
+  ];
+
+  const mockAnalytics: SearchAnalytics = {
+    totalResults: 1247,
+    avgRelevance: 78.5,
+    topAssignees: [
+      { name: 'TechCorp Industries', count: 156 },
+      { name: 'InnovateAI Ltd', count: 134 },
+      { name: 'DataSystems Inc', count: 98 },
+      { name: 'QuantumFinance Corp', count: 87 },
+      { name: 'BlockChain Solutions', count: 76 }
+    ],
+    statusDistribution: [
+      { status: 'Granted', count: 789, color: '#10B981' },
+      { status: 'Pending', count: 234, color: '#F59E0B' },
+      { status: 'Expired', count: 156, color: '#6B7280' },
+      { status: 'Abandoned', count: 68, color: '#EF4444' }
+    ],
+    filingTrends: [
+      { year: '2019', count: 89, grants: 67 },
+      { year: '2020', count: 156, grants: 134 },
+      { year: '2021', count: 234, grants: 198 },
+      { year: '2022', count: 345, grants: 267 },
+      { year: '2023', count: 423, grants: 123 }
+    ],
+    citationTrends: [
+      { patent: 'AI-System', citations: 45 },
+      { patent: 'Blockchain-SCM', citations: 38 },
+      { patent: 'Quantum-Algo', citations: 12 },
+      { patent: 'ML-Finance', citations: 67 },
+      { patent: 'IoT-Manufacturing', citations: 34 }
+    ],
+    geographicDistribution: [
+      { country: 'United States', count: 567 },
+      { country: 'China', count: 234 },
+      { country: 'European Union', count: 189 },
+      { country: 'Japan', count: 145 },
+      { country: 'South Korea', count: 89 },
+      { country: 'Canada', count: 23 }
+    ]
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      toast({
+        title: 'Search Required',
+        description: 'Please enter a search term',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    setIsSearching(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setPatents(mockPatents);
+      setAnalytics(mockAnalytics);
+      setIsSearching(false);
+      
+      toast({
+        title: 'Search Complete',
+        description: `Found ${mockPatents.length} patents matching your criteria`
+      });
+    }, 1500);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'expired': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'granted': return 'bg-success/20 text-success border-success/30';
+      case 'pending': return 'bg-warning/20 text-warning border-warning/30';
+      case 'expired': return 'bg-muted/20 text-muted-foreground border-muted/30';
+      case 'abandoned': return 'bg-destructive/20 text-destructive border-destructive/30';
+      default: return 'bg-muted/20 text-muted-foreground border-muted/30';
     }
   };
 
-  const getRelevanceColor = (score: number) => {
-    if (score >= 90) return 'bg-red-100 text-red-800';
-    if (score >= 75) return 'bg-orange-100 text-orange-800';
-    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-green-100 text-green-800';
+  const exportResults = () => {
+    toast({
+      title: 'Export Started',
+      description: 'Patent search results are being exported to CSV'
+    });
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'patent': return 'bg-blue-100 text-blue-800';
-      case 'publication': return 'bg-purple-100 text-purple-800';
-      case 'article': return 'bg-indigo-100 text-indigo-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
+  const handlePatentClick = (patent: Patent) => {
+    setSelectedPatent(patent);
   };
-
-  const filteredPatents = patents.filter(patent =>
-    patent.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    patent.patentNumber.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const filteredPriorArt = priorArtResults.filter(result =>
-    result.title.toLowerCase().includes(priorArtQuery.toLowerCase()) ||
-    result.summary.toLowerCase().includes(priorArtQuery.toLowerCase())
-  );
 
   return (
-    <Layout>
+    <Layout title="Patent Search & Prior Art Analysis">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">IP Fortress Search</h1>
-          <p className="text-muted-foreground">Search patents and conduct prior art analysis</p>
-        </div>
-
-        <Tabs defaultValue="patents" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="patents" className="flex items-center gap-2">
-              <Database className="w-4 h-4" />
-              Patent Portfolio
-            </TabsTrigger>
-            <TabsTrigger value="prior-art" className="flex items-center gap-2">
-              <Lightbulb className="w-4 h-4" />
-              Prior Art Search
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="patents" className="space-y-6">
-            <div className="flex gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        {/* Search Header */}
+        <Card className="glass border-glass-border/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-cyber">
+              <Search className="w-6 h-6 text-primary" />
+              Advanced Patent Search
+            </CardTitle>
+            <CardDescription>
+              Comprehensive patent search with AI-powered relevance scoring and analytics
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-4 mb-4">
+              <div className="flex-1">
                 <Input
-                  placeholder="Search patents by title or number..."
+                  placeholder="Enter keywords, patent numbers, or inventor names..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="text-base"
                 />
               </div>
-              <Button>Advanced Search</Button>
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="granted">Granted</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="expired">Expired</SelectItem>
+                  <SelectItem value="abandoned">Abandoned</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button onClick={handleSearch} disabled={isSearching} className="px-8">
+                {isSearching ? (
+                  <Activity className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Search className="w-4 h-4 mr-2" />
+                )}
+                Search
+              </Button>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="grid grid-cols-1 gap-4">
-              {filteredPatents.map((patent) => (
-                <GlassCard key={patent.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-lg">{patent.title}</h3>
-                        <Badge className={getStatusColor(patent.status)}>
-                          {patent.status}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{patent.description}</p>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">Patent Number:</span>
-                          <p className="font-medium">{patent.patentNumber}</p>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Inventors:</span>
-                          <p className="font-medium">{patent.inventors.join(', ')}</p>
-                        </div>
-                        <div>
-                          <span className="text-muted-foreground">Expiry Date:</span>
-                          <p className="font-medium">{new Date(patent.expiryDate).toLocaleDateString()}</p>
-                        </div>
-                      </div>
-                      {patent.claims && (
-                        <div className="mt-3">
-                          <span className="text-muted-foreground text-sm">Key Claims:</span>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {patent.claims.map((claim, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {claim}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <Button variant="outline" size="sm">
-                        <FileText className="w-4 h-4 mr-1" />
-                        View Details
-                      </Button>
-                    </div>
+        {/* Analytics Dashboard */}
+        {analytics && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Key Metrics */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="text-lg">Search Metrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Total Results</span>
+                    <span className="text-2xl font-bold text-primary">{analytics.totalResults.toLocaleString()}</span>
                   </div>
-                </GlassCard>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="prior-art" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              <div className="lg:col-span-3">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    placeholder="Describe your invention for prior art search..."
-                    value={priorArtQuery}
-                    onChange={(e) => setPriorArtQuery(e.target.value)}
-                    className="pl-10"
-                  />
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Avg Relevance</span>
+                    <span className="text-2xl font-bold text-success">{analytics.avgRelevance}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Active Patents</span>
+                    <span className="text-2xl font-bold text-accent">{analytics.statusDistribution[0].count}</span>
+                  </div>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
+
+            {/* Status Distribution Pie Chart */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <PieChart className="w-5 h-5" />
+                  Status Distribution
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={200}>
+                  <RechartsPieChart>
+                    <Pie
+                      data={analytics.statusDistribution}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={40}
+                      outerRadius={80}
+                      dataKey="count"
+                      label={({ status, count }) => `${status}: ${count}`}
+                    >
+                      {analytics.statusDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </RechartsPieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Top Assignees */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Top Assignees
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {analytics.topAssignees.map((assignee, index) => (
+                    <div key={assignee.name} className="flex justify-between items-center">
+                      <span className="text-sm truncate">{assignee.name}</span>
+                      <Badge variant="secondary">{assignee.count}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Trending Charts */}
+        {analytics && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Filing Trends */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5" />
+                  Filing Trends Over Time
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={analytics.filingTrends}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="count"
+                      stackId="1"
+                      stroke="hsl(var(--primary))"
+                      fill="hsl(var(--primary) / 0.3)"
+                      name="Total Filings"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="grants"
+                      stackId="1"
+                      stroke="hsl(var(--success))"
+                      fill="hsl(var(--success) / 0.3)"
+                      name="Granted Patents"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Citation Analysis */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="w-5 h-5" />
+                  Citation Analysis
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={analytics.citationTrends}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="patent" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar
+                      dataKey="citations"
+                      fill="hsl(var(--accent))"
+                      name="Citation Count"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Search Results */}
+        {patents.length > 0 && (
+          <Card className="glass border-glass-border/30">
+            <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <Select value={selectedDatabase} onValueChange={setSelectedDatabase}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select database" />
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  Search Results ({patents.length})
+                </CardTitle>
+                <CardDescription>
+                  Patents matching your search criteria
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Databases</SelectItem>
-                    <SelectItem value="uspto">USPTO</SelectItem>
-                    <SelectItem value="google">Google Patents</SelectItem>
-                    <SelectItem value="ieee">IEEE Xplore</SelectItem>
-                    <SelectItem value="pubmed">PubMed</SelectItem>
+                    <SelectItem value="relevance">Sort by Relevance</SelectItem>
+                    <SelectItem value="date">Sort by Date</SelectItem>
+                    <SelectItem value="citations">Sort by Citations</SelectItem>
                   </SelectContent>
                 </Select>
+                <Button variant="outline" onClick={exportResults}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export
+                </Button>
               </div>
-            </div>
-
-            <div className="flex gap-2">
-              <Button>
-                <Search className="w-4 h-4 mr-2" />
-                Run Prior Art Search
-              </Button>
-              <Button variant="outline">
-                <Upload className="w-4 h-4 mr-2" />
-                Upload Claims
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
-              {filteredPriorArt.map((result) => (
-                <GlassCard key={result.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-lg">{result.title}</h3>
-                        <Badge className={getRelevanceColor(result.relevanceScore)}>
-                          {result.relevanceScore}% Relevant
-                        </Badge>
-                        <Badge className={getTypeColor(result.type)}>
-                          {result.type}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{result.summary}</p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-muted-foreground">Source:</span>
-                          <p className="font-medium">{result.source}</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {patents.map((patent) => (
+                  <Card
+                    key={patent.id}
+                    className="glass border-glass-border/30 cursor-pointer hover:border-primary/30 transition-colors"
+                    onClick={() => handlePatentClick(patent)}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold mb-2">{patent.title}</h3>
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            <Badge className={getStatusColor(patent.status)}>
+                              {patent.status.toUpperCase()}
+                            </Badge>
+                            <Badge variant="outline">{patent.patentNumber}</Badge>
+                            <Badge variant="outline" className="bg-primary/10 text-primary">
+                              Relevance: {patent.relevanceScore}%
+                            </Badge>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-muted-foreground">Publication Date:</span>
-                          <p className="font-medium">{new Date(result.publicationDate).toLocaleDateString()}</p>
+                        <div className="text-right">
+                          <div className="text-sm text-muted-foreground mb-1">Citations</div>
+                          <div className="text-2xl font-bold text-accent">{patent.citationCount}</div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <Button variant="outline" size="sm">
-                        <Eye className="w-4 h-4 mr-1" />
-                        View
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-1" />
-                        Download
-                      </Button>
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Inventor(s)</div>
+                          <div className="text-sm font-medium">{patent.inventor}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Assignee</div>
+                          <div className="text-sm font-medium">{patent.assignee}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Filing Date</div>
+                          <div className="text-sm font-medium">{patent.filingDate}</div>
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {patent.abstract.substring(0, 200)}...
+                      </p>
+                      
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2">
+                          <Badge variant="outline">
+                            <MapPin className="w-3 h-3 mr-1" />
+                            {patent.country}
+                          </Badge>
+                          <Badge variant="outline">{patent.classification}</Badge>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* No Results State */}
+        {patents.length === 0 && !isSearching && (
+          <Card className="glass border-glass-border/30">
+            <CardContent className="p-12 text-center">
+              <Search className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
+              <h3 className="text-xl font-semibold mb-2">Start Your Patent Search</h3>
+              <p className="text-muted-foreground mb-6">
+                Enter keywords, patent numbers, or inventor names to begin your comprehensive patent analysis
+              </p>
+              <Button onClick={() => setSearchQuery('artificial intelligence business')}>
+                Try Example Search
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </Layout>
   );
-}
+};
+
+export default PatentSearch;

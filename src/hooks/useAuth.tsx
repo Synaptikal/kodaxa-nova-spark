@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { debugSupabaseConnection, logSupabaseError } from '@/utils/supabaseDebug';
 
 interface Profile {
   id: string;
@@ -15,6 +16,7 @@ interface Profile {
   phone: string | null;
   website: string | null;
   linkedin_url: string | null;
+  preferred_agent: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -75,6 +77,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const isAdmin = userRoles.some(role => role.role === 'admin');
   const isModerator = userRoles.some(role => role.role === 'moderator');
 
+  // Test database connection
+  const testDatabaseConnection = async () => {
+    try {
+      console.log('Testing database connection...');
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('count')
+        .limit(1);
+
+      if (error) {
+        console.error('Database connection test failed:', {
+          message: error.message,
+          code: error.code,
+          details: error.details
+        });
+        return false;
+      }
+
+      console.log('Database connection successful');
+      return true;
+    } catch (error) {
+      console.error('Database connection test error:', error);
+      return false;
+    }
+  };
+
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
@@ -83,14 +111,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
+      if (error) {
+        // PGRST116 means no rows returned, which is fine for profiles
+        if (error.code === 'PGRST116') {
+          console.log('No profile found for user, will create default profile');
+          // Create a default profile if none exists
+          await createDefaultProfile(userId);
+          return;
+        }
+
+        // Handle table doesn't exist error
+        if (error.code === '42P01') {
+          console.warn('Profiles table does not exist. Skipping profile fetch.');
+          return;
+        }
+
+        logSupabaseError('fetchProfile', error);
         return;
       }
 
       setProfile(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
     }
   };
 
@@ -102,19 +147,72 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId);
 
       if (error) {
-        console.error('Error fetching user roles:', error);
+        // Handle table doesn't exist error
+        if (error.code === '42P01') {
+          console.warn('User roles table does not exist. User will have default permissions.');
+          setUserRoles([]);
+          return;
+        }
+
+        logSupabaseError('fetchUserRoles', error);
+        setUserRoles([]);
         return;
       }
 
       setUserRoles(data || []);
     } catch (error) {
-      console.error('Error fetching user roles:', error);
+      console.error('Error fetching user roles:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
+      setUserRoles([]);
+    }
+  };
+
+  const createDefaultProfile = async (userId: string) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData.user;
+
+      if (!user) return;
+
+      const defaultProfile = {
+        user_id: userId,
+        first_name: user.user_metadata?.first_name || null,
+        last_name: user.user_metadata?.last_name || null,
+        company_name: user.user_metadata?.company_name || null,
+        role: null,
+        avatar_url: null,
+        bio: null,
+        phone: null,
+        website: null,
+        linkedin_url: null
+      };
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert(defaultProfile)
+        .select()
+        .single();
+
+      if (error) {
+        logSupabaseError('createDefaultProfile', error);
+        return;
+      }
+
+      setProfile(data);
+      console.log('Default profile created successfully');
+    } catch (error) {
+      console.error('Error creating default profile:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
     }
   };
 
   const checkSubscription = async () => {
     if (!session) return;
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
@@ -123,31 +221,69 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
-        console.error('Subscription check error:', error);
+        logSupabaseError('checkSubscription', error);
+        // Set default subscription state
+        setSubscription({
+          subscribed: false,
+          subscription_tier: null,
+          subscription_status: 'inactive',
+          subscription_end: null,
+          annual_billing: false
+        });
         return;
       }
 
       setSubscription(data);
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error('Error checking subscription:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
+      // Set default subscription state on error
+      setSubscription({
+        subscribed: false,
+        subscription_tier: null,
+        subscription_status: 'inactive',
+        subscription_end: null,
+        annual_billing: false
+      });
     }
   };
 
   useEffect(() => {
+    // Run comprehensive debug on initialization
+    if (process.env.NODE_ENV === 'development') {
+      debugSupabaseConnection();
+    }
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id ? 'User logged in' : 'User logged out');
+
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user profile, roles, and subscription
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-            fetchUserRoles(session.user.id);
-            checkSubscription();
-          }, 0);
+          // Test database connection before fetching user data
+          const dbConnected = await testDatabaseConnection();
+
+          if (dbConnected) {
+            // Fetch user profile, roles, and subscription with error handling
+            try {
+              await Promise.allSettled([
+                fetchProfile(session.user.id),
+                fetchUserRoles(session.user.id),
+                checkSubscription()
+              ]);
+            } catch (error) {
+              console.error('Error during user data fetch:', error);
+            }
+          } else {
+            console.warn('Database connection failed, using default user state');
+          }
         } else {
+          // Clear user data on logout
           setProfile(null);
           setUserRoles([]);
           setSubscription(null);
@@ -158,16 +294,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+
+      console.log('Initial session check:', session?.user?.id ? 'User found' : 'No user');
+
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchUserRoles(session.user.id);
-        checkSubscription();
+        try {
+          await Promise.allSettled([
+            fetchProfile(session.user.id),
+            fetchUserRoles(session.user.id),
+            checkSubscription()
+          ]);
+        } catch (error) {
+          console.error('Error during initial user data fetch:', error);
+        }
       }
-      
+
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Error in getSession:', error);
       setLoading(false);
     });
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -6,6 +7,7 @@ import { usePerformanceMonitoring } from '@/hooks/usePerformanceMonitoring'
 import App from './App.tsx'
 import './index.css'
 import { ErrorBoundary } from './components/common/ErrorBoundary'
+import { SimpleWrapper } from './components/SimpleWrapper'
 
 // Enhanced QueryClient with optimized settings
 const queryClient = new QueryClient({
@@ -21,18 +23,31 @@ const queryClient = new QueryClient({
 
 // Performance monitoring wrapper
 const AppWithMonitoring = () => {
-  usePerformanceMonitoring();
+  // Temporarily disable performance monitoring to isolate issue
+  // usePerformanceMonitoring();
   return <App />;
 };
 
-createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
-    <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <AppWithMonitoring />
-        </QueryClientProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
+// Ensure DOM is ready
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error('Root element not found');
+}
+
+// Create root and render app
+const reactRoot = createRoot(root);
+reactRoot.render(
+  <React.StrictMode>
+    <SimpleWrapper>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <AppWithMonitoring />
+            </QueryClientProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </SimpleWrapper>
+  </React.StrictMode>
 );

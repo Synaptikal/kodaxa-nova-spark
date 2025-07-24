@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages for better performance
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 const CapitalForge = lazy(() => import("./pages/CapitalForge"));
 const MarketSizing = lazy(() => import("./pages/forge/MarketSizing"));
 const FinancialProjections = lazy(() => import("./pages/forge/FinancialProjections"));
@@ -32,6 +33,7 @@ const TaskHistory = lazy(() => import("./pages/aiworkspace/TaskHistory"));
 const ActiveTasks = lazy(() => import("./pages/aiworkspace/ActiveTasks"));
 const AgentSettings = lazy(() => import("./pages/aiworkspace/AgentSettings"));
 const PatentSearch = lazy(() => import("./pages/ipfortress/PatentSearch"));
+const PatentPortfolio = lazy(() => import("./pages/ipfortress/PatentPortfolio"));
 const MaintenanceAlerts = lazy(() => import("./pages/ipfortress/MaintenanceAlerts"));
 
 // Enhanced loading fallback component
@@ -50,8 +52,26 @@ const App = () => (
       <Sonner />
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
-          <Route path="/auth" element={<Auth />} />
+          {/* Public Routes */}
           <Route path="/" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
+          <Route path="/landing" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
+          <Route path="/home" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
+          <Route path="/auth" element={<Auth />} />
+
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
             <ProtectedRoute>
               <Index />
             </ProtectedRoute>
@@ -220,7 +240,7 @@ const App = () => (
           <Route path="/ip/patents" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
-                <PatentSearch />
+                <PatentPortfolio />
               </Suspense>
             </ProtectedRoute>
           } />

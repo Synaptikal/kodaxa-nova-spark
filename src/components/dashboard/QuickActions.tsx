@@ -2,15 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  PlusCircle, 
-  BarChart3, 
-  FileText, 
-  Shield, 
+import {
+  PlusCircle,
+  BarChart3,
+  FileText,
+  Shield,
   Brain,
   Download,
   Upload,
-  Settings
+  Settings,
+  ShoppingCart,
+  ExternalLink
 } from "lucide-react";
 
 export function QuickActions() {
@@ -44,6 +46,13 @@ export function QuickActions() {
       action: () => handleAction("AI Workspace", "Initializing strategic AI advisory session", "/ai"),
     },
     {
+      icon: ShoppingCart,
+      label: "Browse Marketplace",
+      description: "Discover powerful add-ons",
+      variant: "secondary" as const,
+      action: () => handleAction("Marketplace", "Opening add-on marketplace for enhanced capabilities", "/add-ons"),
+    },
+    {
       icon: Shield,
       label: "IP Portfolio Review",
       description: "Patent filing & analysis",
@@ -58,18 +67,18 @@ export function QuickActions() {
       action: () => handleAction("Report Generation", "Preparing C-suite analytics dashboard"),
     },
     {
-      icon: Upload,
-      label: "Data Integration",
-      description: "Connect enterprise systems",
-      variant: "ghost" as const,
-      action: () => handleAction("Data Pipeline", "Opening secure data integration portal"),
-    },
-    {
       icon: Settings,
       label: "System Administration",
       description: "Configure enterprise settings",
       variant: "ghost" as const,
       action: () => handleAction("Admin Panel", "Accessing enterprise configuration center", "/settings"),
+    },
+    {
+      icon: ExternalLink,
+      label: "View Marketing Page",
+      description: "See platform overview",
+      variant: "ghost" as const,
+      action: () => window.open('/landing', '_blank'),
     },
   ];
 

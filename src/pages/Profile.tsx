@@ -7,22 +7,45 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Bell, 
-  Shield, 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  User,
+  Mail,
+  Lock,
+  Bell,
+  Shield,
   Key,
   Smartphone,
   Globe,
   Eye,
   Settings,
   Save,
-  Upload
+  Upload,
+  Bot
 } from "lucide-react";
 
 export default function Profile() {
+  const { profile, updateProfile, subscription } = useAuth();
+
+  const availableAgents = [
+    { id: 'hf-blenderbot', name: 'BlenderBot (Free)', description: 'Conversational AI assistant' },
+    { id: 'hf-gpt2', name: 'GPT-2 (Free)', description: 'Fast general-purpose text generation' },
+    { id: 'hf-distilbert', name: 'DistilBERT (Free)', description: 'Efficient question answering' },
+    ...(subscription?.subscribed ? [
+      { id: 'gpt-4', name: 'GPT-4 (Premium)', description: 'Advanced reasoning and analysis' },
+      { id: 'claude-3', name: 'Claude 3 (Premium)', description: 'Expert in complex reasoning' },
+      { id: 'gemini-pro', name: 'Gemini Pro (Premium)', description: 'Multimodal AI assistant' }
+    ] : [])
+  ];
+
+  const handleAgentChange = async (agentId: string) => {
+    try {
+      await updateProfile({ preferred_agent: agentId });
+    } catch (error) {
+      console.error('Error updating preferred agent:', error);
+    }
+  };
   const apiKeys = [
     {
       id: 1,
@@ -187,6 +210,57 @@ export default function Profile() {
                   <Smartphone className="w-4 h-4 mr-2" />
                   Setup Authenticator App
                 </Button>
+              </CardContent>
+            </Card>
+
+            {/* AI Agent Preferences */}
+            <Card className="glass border-glass-border/30">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Bot className="w-5 h-5 mr-2 text-primary" />
+                  AI Agent Preferences
+                </CardTitle>
+                <CardDescription>
+                  Choose your preferred AI assistant for the sidebar chat
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="preferredAgent">Default AI Agent</Label>
+                  <Select
+                    value={profile?.preferred_agent || 'hf-blenderbot'}
+                    onValueChange={handleAgentChange}
+                  >
+                    <SelectTrigger className="glass border-glass-border/30">
+                      <SelectValue placeholder="Select your preferred AI agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableAgents.map((agent) => (
+                        <SelectItem key={agent.id} value={agent.id}>
+                          <div>
+                            <p className="font-medium">{agent.name}</p>
+                            <p className="text-xs text-muted-foreground">{agent.description}</p>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    This agent will be selected by default in your AI chat sidebar. You can change it anytime.
+                  </p>
+                </div>
+
+                {!subscription?.subscribed && (
+                  <div className="p-3 rounded-lg bg-muted/30 border border-muted">
+                    <p className="text-sm font-medium mb-1">Upgrade for Premium Agents</p>
+                    <p className="text-xs text-muted-foreground mb-2">
+                      Access GPT-4, Claude 3, Gemini Pro and other advanced AI models
+                    </p>
+                    <Button variant="outline" size="sm">
+                      View Pricing Plans
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
