@@ -190,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
         </div>
         <nav className="flex items-center gap-1">
           {/* Show marketing links on landing page */}
-          {location.pathname === '/landing' ? (
+          {(location.pathname === '/landing' || location.pathname === '/') ? (
             <>
               <SimpleNavLink href="#features">Features</SimpleNavLink>
               <SimpleNavLink href="#pricing">Pricing</SimpleNavLink>
