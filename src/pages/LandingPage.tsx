@@ -15,10 +15,27 @@ import {
 const LandingPage = () => {
   const [activeFeature, setActiveFeature] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // Smooth scroll behavior for anchor links
+    const handleSmoothScroll = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.href && target.href.includes('#')) {
+        e.preventDefault();
+        const id = target.href.split('#')[1];
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleSmoothScroll);
+    return () => document.removeEventListener('click', handleSmoothScroll);
   }, []);
 
   const features = [
@@ -200,7 +217,12 @@ const LandingPage = () => {
               <Play className="w-5 h-5 mr-2" />
               Start Free Trial
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 py-4"
+              onClick={() => setShowDemo(true)}
+            >
               <Eye className="w-5 h-5 mr-2" />
               Watch Demo
             </Button>
@@ -442,7 +464,12 @@ const LandingPage = () => {
               <Rocket className="w-5 h-5 mr-2" />
               Start Your Free Trial
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-8 py-4"
+              onClick={() => setShowDemo(true)}
+            >
               <MessageSquare className="w-5 h-5 mr-2" />
               Schedule Demo
             </Button>
@@ -452,6 +479,32 @@ const LandingPage = () => {
           </p>
         </div>
       </section>
+
+      {/* Demo Modal */}
+      {showDemo && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <Card className="glass border-glass-border/30 max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-2xl">KODAXA Platform Demo</CardTitle>
+              <Button variant="ghost" size="sm" onClick={() => setShowDemo(false)}>
+                ✕
+              </Button>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                <div className="text-center">
+                  <Play className="w-16 h-16 text-primary mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Interactive Platform Demo</h3>
+                  <p className="text-muted-foreground mb-4">See KODAXA in action with our comprehensive walkthrough</p>
+                  <Button onClick={() => navigate('/auth')}>
+                    Start Your Free Trial Instead
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="py-12 border-t border-glass-border/30">
