@@ -1,15 +1,23 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { 
-  Home, 
-  BarChart3, 
-  Brain, 
-  Shield, 
+import {
+  Home,
+  BarChart3,
+  Brain,
+  Shield,
   Settings,
   Target,
   DollarSign,
   Users,
-  TrendingUp
+  TrendingUp,
+  ShoppingCart,
+  CreditCard,
+  Package,
+  Search,
+  AlertTriangle,
+  Monitor,
+  Activity,
+  History
 } from 'lucide-react';
 
 interface MenuItem {
@@ -44,6 +52,7 @@ const defaultMenuItems: MenuItem[] = [
   { label: 'AI Workspace', href: '/ai', icon: Brain },
   { label: 'IP Fortress', href: '/ip', icon: Shield },
   { label: 'Capital Forge', href: '/forge', icon: BarChart3 },
+  { label: 'Marketplace', href: '/add-ons', icon: ShoppingCart },
   { label: 'Admin Panel', href: '/admin', icon: Settings },
 ];
 
@@ -66,8 +75,21 @@ const businessMenuItems: MenuItem[] = [
 const ipFortressMenuItems: MenuItem[] = [
   { label: 'IP Dashboard', href: '/ip', icon: Shield },
   { label: 'Patent Portfolio', href: '/ip/patents', icon: Shield },
-  { label: 'Prior Art Search', href: '/ip/search', icon: TrendingUp },
-  { label: 'Maintenance Tracker', href: '/ip/maintenance', icon: Settings },
+  { label: 'Patent Search', href: '/ip/search', icon: Search },
+  { label: 'Maintenance Alerts', href: '/ip/maintenance', icon: AlertTriangle },
+];
+
+const marketplaceMenuItems: MenuItem[] = [
+  { label: 'Browse Add-ons', href: '/add-ons', icon: ShoppingCart },
+  { label: 'Pricing Plans', href: '/pricing', icon: CreditCard },
+  { label: 'My Subscription', href: '/subscription', icon: Package },
+];
+
+const adminMenuItems: MenuItem[] = [
+  { label: 'System Overview', href: '/admin', icon: Settings },
+  { label: 'Revenue Analytics', href: '/analytics', icon: Monitor },
+  { label: 'Settings', href: '/settings', icon: Settings },
+  { label: 'Profile', href: '/profile', icon: Users },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -77,6 +99,8 @@ export const Sidebar: React.FC = () => {
     if (pathname.startsWith('/ai')) return aiWorkspaceMenuItems;
     if (pathname.startsWith('/ip')) return ipFortressMenuItems;
     if (pathname.startsWith('/forge')) return businessMenuItems;
+    if (pathname.startsWith('/add-ons') || pathname.startsWith('/pricing') || pathname.startsWith('/subscription')) return marketplaceMenuItems;
+    if (pathname.startsWith('/admin') || pathname.startsWith('/analytics') || pathname.startsWith('/settings') || pathname.startsWith('/profile')) return adminMenuItems;
     return defaultMenuItems;
   };
 
