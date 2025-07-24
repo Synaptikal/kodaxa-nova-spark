@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 // Lazy load non-critical pages for better performance
+const LandingPage = lazy(() => import("./pages/LandingPage"));
 const CapitalForge = lazy(() => import("./pages/CapitalForge"));
 const MarketSizing = lazy(() => import("./pages/forge/MarketSizing"));
 const FinancialProjections = lazy(() => import("./pages/forge/FinancialProjections"));
@@ -50,6 +51,11 @@ const App = () => (
       <Sonner />
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
+          <Route path="/landing" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={
             <ProtectedRoute>
