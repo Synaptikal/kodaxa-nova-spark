@@ -11,7 +11,8 @@ import {
   Download,
   Upload,
   Settings,
-  ShoppingCart
+  ShoppingCart,
+  ExternalLink
 } from "lucide-react";
 
 export function QuickActions() {
