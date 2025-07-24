@@ -24,7 +24,7 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
   return (
-    <Layout title="Dashboard" showSidebar={false}>
+    <Layout title="Dashboard" showSidebar={false} showBreadcrumbs={false}>
       <div className="space-y-6">
         {/* Hero Section */}
         <div className={`relative rounded-xl overflow-hidden glass border-glass-border/30 transition-all duration-1000 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
