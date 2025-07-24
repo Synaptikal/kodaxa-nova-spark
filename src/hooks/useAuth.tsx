@@ -75,6 +75,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const isAdmin = userRoles.some(role => role.role === 'admin');
   const isModerator = userRoles.some(role => role.role === 'moderator');
 
+  // Test database connection
+  const testDatabaseConnection = async () => {
+    try {
+      console.log('Testing database connection...');
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('count')
+        .limit(1);
+
+      if (error) {
+        console.error('Database connection test failed:', {
+          message: error.message,
+          code: error.code,
+          details: error.details
+        });
+        return false;
+      }
+
+      console.log('Database connection successful');
+      return true;
+    } catch (error) {
+      console.error('Database connection test error:', error);
+      return false;
+    }
+  };
+
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
