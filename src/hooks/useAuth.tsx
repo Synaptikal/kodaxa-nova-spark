@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import * as React from 'react';
+import { ReactNode } from 'react';
+
+const { createContext, useContext, useEffect, useState } = React;
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
