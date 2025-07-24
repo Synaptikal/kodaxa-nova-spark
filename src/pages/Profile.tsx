@@ -7,19 +7,22 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Mail, 
-  Lock, 
-  Bell, 
-  Shield, 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  User,
+  Mail,
+  Lock,
+  Bell,
+  Shield,
   Key,
   Smartphone,
   Globe,
   Eye,
   Settings,
   Save,
-  Upload
+  Upload,
+  Bot
 } from "lucide-react";
 
 export default function Profile() {
