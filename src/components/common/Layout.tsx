@@ -23,7 +23,7 @@ export const Layout: React.FC<LayoutProps> = ({
     <div className="min-h-screen bg-background">
       <Header title={title} />
       <div className="flex">
-        {showSidebar && <Sidebar />}
+        {showSidebar && <AIChatSidebar />}
         <main className="flex-1 p-6">
           {showBreadcrumbs && <Breadcrumbs />}
           {children}
