@@ -125,12 +125,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           return;
         }
 
-        console.error('Error fetching profile:', {
-          message: error.message,
-          code: error.code,
-          details: error.details,
-          hint: error.hint
-        });
+        logSupabaseError('fetchProfile', error);
         return;
       }
 
@@ -158,12 +153,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           return;
         }
 
-        console.error('Error fetching user roles:', {
-          message: error.message,
-          code: error.code,
-          details: error.details,
-          hint: error.hint
-        });
+        logSupabaseError('fetchUserRoles', error);
         setUserRoles([]);
         return;
       }
@@ -205,11 +195,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .single();
 
       if (error) {
-        console.error('Error creating default profile:', {
-          message: error.message,
-          code: error.code,
-          details: error.details
-        });
+        logSupabaseError('createDefaultProfile', error);
         return;
       }
 
@@ -234,10 +220,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
-        console.error('Subscription check error:', {
-          message: error.message || 'Unknown subscription error',
-          details: error
-        });
+        logSupabaseError('checkSubscription', error);
         // Set default subscription state
         setSubscription({
           subscribed: false,
