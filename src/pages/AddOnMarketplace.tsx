@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -582,6 +584,42 @@ const marketplaceAddons: MarketplaceAddon[] = [
       verified: true,
       rating: 4.6
     }
+  },
+  {
+    id: 'crypto-blockchain-analyzer',
+    name: 'Crypto & Blockchain Analyzer',
+    category: 'industry-solutions',
+    subcategory: 'Cryptocurrency',
+    description: 'Advanced cryptocurrency and blockchain analysis tools',
+    longDescription: 'Comprehensive cryptocurrency analysis platform providing blockchain analytics, DeFi tracking, portfolio analysis, and regulatory compliance for crypto businesses.',
+    price: 349,
+    priceModel: 'monthly',
+    provider: 'partner',
+    rating: 4.3,
+    reviews: 78,
+    downloads: 290,
+    featured: false,
+    verified: true,
+    icon: Banknote,
+    screenshots: ['crypto-dashboard.jpg', 'blockchain-analysis.jpg', 'defi-tracking.jpg'],
+    features: [
+      'Multi-chain blockchain analysis',
+      'DeFi protocol tracking',
+      'Cryptocurrency portfolio analytics',
+      'Regulatory compliance monitoring',
+      'Smart contract analysis'
+    ],
+    integrations: ['Ethereum', 'Bitcoin', 'Polygon', 'Binance Smart Chain'],
+    requirements: ['Professional tier or higher'],
+    supportedModules: ['business-foundry', 'compliance-sentinel'],
+    tags: ['cryptocurrency', 'blockchain', 'defi', 'analysis', 'compliance'],
+    lastUpdated: '2024-03-05',
+    version: '0.9.8',
+    developer: {
+      name: 'CryptoAnalytics Pro',
+      verified: false,
+      rating: 4.2
+    }
   }
 ];
 
@@ -592,7 +630,7 @@ const AddOnMarketplace = () => {
   const [priceFilter, setPriceFilter] = useState<'all' | 'free' | 'under-100' | 'under-500' | 'premium'>('all');
   const [providerFilter, setProviderFilter] = useState<'all' | 'kodaxa' | 'partner' | 'community'>('all');
   const [showFeatured, setShowFeatured] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   // Supabase integration for backend functionality
   const [userAddOns, setUserAddOns] = useState<string[]>([]);
@@ -601,6 +639,7 @@ const AddOnMarketplace = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    setIsLoaded(true);
     if (user) {
       loadUserAddOns();
     }
@@ -715,24 +754,24 @@ const AddOnMarketplace = () => {
     const isPurchasing = purchasing === addon.id;
     
     return (
-      <Card className={`relative transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${isPurchased ? 'ring-2 ring-green-500' : 'hover:border-primary/50'}`}>
+      <Card className={`glass border-glass-border/30 relative transition-all duration-300 hover:scale-105 hover:border-primary/20 ${isPurchased ? 'ring-2 ring-success' : ''}`}>
         {addon.featured && (
-          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 z-10">
+          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-accent text-primary-foreground px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 z-10">
             <Star size={12} className="fill-current" />
             Featured
           </div>
         )}
         
         {isPurchased && (
-          <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-500 to-green-600 text-white text-center py-2 text-sm font-semibold rounded-t-lg">
+          <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-success to-success-glow text-success-foreground text-center py-2 text-sm font-semibold rounded-t-lg">
             ✅ Active
           </div>
         )}
 
         <CardHeader className={isPurchased ? 'pt-12' : 'pt-6'}>
           <div className="flex items-start gap-4 mb-4">
-            <div className="bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl p-3">
-              <addon.icon size={24} className="text-white" />
+            <div className="bg-gradient-primary rounded-xl p-3">
+              <addon.icon size={24} className="text-primary-foreground" />
             </div>
             <div className="flex-1">
               <div className="flex items-start justify-between">
@@ -741,7 +780,7 @@ const AddOnMarketplace = () => {
                   <p className="text-sm text-muted-foreground mb-2">{addon.subcategory}</p>
                 </div>
                 {addon.verified && (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-300">
+                  <Badge className="bg-success/20 text-success border-success/30">
                     <Verified size={12} className="mr-1" />
                     Verified
                   </Badge>
@@ -753,7 +792,7 @@ const AddOnMarketplace = () => {
                     <Star 
                       key={i} 
                       size={12} 
-                      className={i < Math.floor(addon.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'} 
+                      className={i < Math.floor(addon.rating) ? 'text-yellow-400 fill-current' : 'text-muted-foreground'} 
                     />
                   ))}
                 </div>
@@ -778,13 +817,13 @@ const AddOnMarketplace = () => {
         <CardContent className="space-y-4">
           <div>
             <h4 className="font-semibold mb-2 flex items-center">
-              <Star className="w-4 h-4 mr-2" />
+              <Sparkles className="w-4 h-4 mr-2 text-accent" />
               Key Features
             </h4>
             <ul className="space-y-1">
               {addon.features.slice(0, 3).map((feature, index) => (
                 <li key={index} className="flex items-start text-sm">
-                  <Check className="w-3 h-3 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <Check className="w-3 h-3 text-success mr-2 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -797,18 +836,18 @@ const AddOnMarketplace = () => {
               {addon.downloads.toLocaleString()} downloads
             </div>
             <div className="flex items-center gap-1 text-sm">
-              <span className={`px-2 py-1 rounded text-xs ${
-                addon.provider === 'kodaxa' ? 'bg-purple-100 text-purple-700' :
-                addon.provider === 'partner' ? 'bg-blue-100 text-blue-700' :
-                'bg-gray-100 text-gray-700'
-              }`}>
+              <Badge variant="outline" className={
+                addon.provider === 'kodaxa' ? 'border-primary/30 text-primary' :
+                addon.provider === 'partner' ? 'border-accent/30 text-accent' :
+                'border-muted text-muted-foreground'
+              }>
                 {addon.provider === 'kodaxa' ? 'Official' : 
                  addon.provider === 'partner' ? 'Partner' : 'Community'}
-              </span>
+              </Badge>
             </div>
           </div>
           
-          <div className="flex items-center justify-between border-t pt-4">
+          <div className="flex items-center justify-between border-t border-glass-border/30 pt-4">
             <div className="text-right">
               <div className="text-2xl font-bold">
                 {addon.price === 0 ? 'Free' : `$${addon.price}`}
@@ -851,216 +890,288 @@ const AddOnMarketplace = () => {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-background">
-        <div className="container mx-auto px-6 py-12">
-          
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-4">
-              Kodaxa Marketplace
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8">
+    <Layout title="Add-on Marketplace">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <ShoppingCart className="w-8 h-8 text-primary animate-pulse" />
+                <div className="absolute inset-0 w-8 h-8 bg-primary/20 rounded-full animate-ping" />
+              </div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-glow via-accent-glow to-success-glow bg-clip-text text-transparent">
+                Kodaxa Marketplace
+              </h1>
+            </div>
+            <p className="text-muted-foreground text-lg">
               Discover powerful add-ons to supercharge your business intelligence platform
             </p>
-            
-            <div className="flex justify-center items-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Verified className="text-green-500" size={16} />
-                All add-ons verified for security
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield className="text-blue-500" size={16} />
+            <div className="flex gap-2">
+              <Badge variant="secondary" className="bg-success/10 text-success border-success/20">
+                <Verified className="w-3 h-3 mr-1" />
+                All verified for security
+              </Badge>
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                <Shield className="w-3 h-3 mr-1" />
                 Enterprise-grade compliance
-              </div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="text-purple-500" size={16} />
+              </Badge>
+              <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20">
+                <Sparkles className="w-3 h-3 mr-1" />
                 30-day money-back guarantee
-              </div>
+              </Badge>
             </div>
           </div>
+          <div className="flex gap-3">
+            <Button variant="outline" className="glass border-glass-border/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-300">
+              <Code className="w-4 h-4 mr-2" />
+              Developer Portal
+            </Button>
+            <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent-glow transition-all duration-300 shadow-lg hover:shadow-xl">
+              <ExternalLink className="w-4 h-4 mr-2" />
+              View Documentation
+            </Button>
+          </div>
+        </div>
 
-          {/* Filters */}
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {/* Search */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
-                  <input
-                    type="text"
-                    placeholder="Search add-ons..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-2 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary"
-                  />
-                </div>
-                
-                {/* Sort */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-primary"
-                >
-                  <option value="featured">Sort by Featured</option>
-                  <option value="rating">Sort by Rating</option>
-                  <option value="downloads">Sort by Downloads</option>
-                  <option value="price">Sort by Price</option>
-                </select>
-                
-                {/* Price Filter */}
-                <select
-                  value={priceFilter}
-                  onChange={(e) => setPriceFilter(e.target.value as any)}
-                  className="bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-primary"
-                >
-                  <option value="all">All Prices</option>
-                  <option value="free">Free</option>
-                  <option value="under-100">Under $100</option>
-                  <option value="under-500">Under $500</option>
-                  <option value="premium">Premium ($500+)</option>
-                </select>
-                
-                {/* Provider Filter */}
-                <select
-                  value={providerFilter}
-                  onChange={(e) => setProviderFilter(e.target.value as any)}
-                  className="bg-background border border-border rounded-lg px-4 py-2 text-foreground focus:outline-none focus:border-primary"
-                >
-                  <option value="all">All Providers</option>
-                  <option value="kodaxa">Official (Kodaxa)</option>
-                  <option value="partner">Verified Partners</option>
-                  <option value="community">Community</option>
-                </select>
+        {/* Filters */}
+        <Card className={`glass border-glass-border/30 transition-all duration-700 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
+                <Input
+                  placeholder="Search add-ons..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
               </div>
               
-              {/* Additional Filters */}
-              <div className="flex flex-wrap gap-4">
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={showFeatured}
-                    onChange={(e) => setShowFeatured(e.target.checked)}
-                    className="rounded border-border text-primary focus:ring-primary"
-                  />
-                  <span className="text-foreground">Featured only</span>
-                </label>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Categories */}
-          <div className="mb-8">
-            <div className="flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  className="flex items-center gap-2"
-                >
-                  <category.icon size={16} />
-                  {category.name}
-                  <Badge variant="secondary" className="ml-1">
-                    {category.count}
-                  </Badge>
-                </Button>
-              ))}
+              {/* Sort */}
+              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="featured">Sort by Featured</SelectItem>
+                  <SelectItem value="rating">Sort by Rating</SelectItem>
+                  <SelectItem value="downloads">Sort by Downloads</SelectItem>
+                  <SelectItem value="price">Sort by Price</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {/* Price Filter */}
+              <Select value={priceFilter} onValueChange={(value: any) => setPriceFilter(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Prices</SelectItem>
+                  <SelectItem value="free">Free</SelectItem>
+                  <SelectItem value="under-100">Under $100</SelectItem>
+                  <SelectItem value="under-500">Under $500</SelectItem>
+                  <SelectItem value="premium">Premium ($500+)</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              {/* Provider Filter */}
+              <Select value={providerFilter} onValueChange={(value: any) => setProviderFilter(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Providers</SelectItem>
+                  <SelectItem value="kodaxa">Official (Kodaxa)</SelectItem>
+                  <SelectItem value="partner">Verified Partners</SelectItem>
+                  <SelectItem value="community">Community</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-
-          {/* Results Count */}
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-muted-foreground">
-              Showing {filteredAddons.length} of {marketplaceAddons.length} add-ons
-            </p>
             
-            {filteredAddons.length > 0 && (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
-                  Avg. Rating: {(filteredAddons.reduce((sum, addon) => sum + addon.rating, 0) / filteredAddons.length).toFixed(1)}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  Total Downloads: {filteredAddons.reduce((sum, addon) => sum + addon.downloads, 0).toLocaleString()}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* Add-ons Grid */}
-          {filteredAddons.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {filteredAddons.map((addon) => (
-                <AddonCard key={addon.id} addon={addon} />
-              ))}
+            {/* Additional Filters */}
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={showFeatured}
+                  onChange={(e) => setShowFeatured(e.target.checked)}
+                  className="rounded border-border text-primary focus:ring-primary"
+                />
+                <span className="text-foreground">Featured only</span>
+              </label>
             </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl font-semibold mb-2">No add-ons found</h3>
-              <p className="text-muted-foreground mb-6">Try adjusting your filters or search terms</p>
+          </CardContent>
+        </Card>
+
+        {/* Categories */}
+        <div className={`transition-all duration-700 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex flex-wrap gap-3">
+            {categories.map((category) => (
               <Button
-                onClick={() => {
-                  setSelectedCategory('all');
-                  setSearchQuery('');
-                  setPriceFilter('all');
-                  setProviderFilter('all');
-                  setShowFeatured(false);
-                }}
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                variant={selectedCategory === category.id ? 'default' : 'outline'}
+                className="flex items-center gap-2 glass border-glass-border/30"
               >
-                Clear All Filters
+                <category.icon size={16} />
+                {category.name}
+                <Badge variant="secondary" className="ml-1">
+                  {category.count}
+                </Badge>
               </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <div className="flex justify-between items-center">
+          <p className="text-muted-foreground">
+            Showing {filteredAddons.length} of {marketplaceAddons.length} add-ons
+          </p>
+          
+          {filteredAddons.length > 0 && (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-muted-foreground">
+                Avg. Rating: {(filteredAddons.reduce((sum, addon) => sum + addon.rating, 0) / filteredAddons.length).toFixed(1)}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Total Downloads: {filteredAddons.reduce((sum, addon) => sum + addon.downloads, 0).toLocaleString()}
+              </span>
             </div>
           )}
-
-          {/* Developer Program CTA */}
-          <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">
-                Build for the Kodaxa Marketplace
-              </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                Join our developer program and reach thousands of businesses worldwide
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center">
-                  <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <DollarSign size={24} className="text-green-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">70% Revenue Share</h3>
-                  <p className="text-muted-foreground text-sm">Keep the majority of your earnings</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Code size={24} className="text-blue-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">Easy Integration</h3>
-                  <p className="text-muted-foreground text-sm">Simple APIs and comprehensive docs</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Users size={24} className="text-purple-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">Global Reach</h3>
-                  <p className="text-muted-foreground text-sm">Access to enterprise customers worldwide</p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="flex items-center gap-2">
-                  <ExternalLink size={20} />
-                  Developer Portal
-                </Button>
-                <Button variant="outline" size="lg">
-                  View Documentation
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
+
+        {/* Add-ons Grid */}
+        {filteredAddons.length > 0 ? (
+          <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-700 delay-400 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            {filteredAddons.map((addon) => (
+              <AddonCard key={addon.id} addon={addon} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-2xl font-semibold mb-2">No add-ons found</h3>
+            <p className="text-muted-foreground mb-6">Try adjusting your filters or search terms</p>
+            <Button
+              onClick={() => {
+                setSelectedCategory('all');
+                setSearchQuery('');
+                setPriceFilter('all');
+                setProviderFilter('all');
+                setShowFeatured(false);
+              }}
+            >
+              Clear All Filters
+            </Button>
+          </div>
+        )}
+
+        {/* Featured Categories */}
+        <div className={`transition-all duration-700 delay-500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <h2 className="text-3xl font-bold mb-8 text-center">Popular Categories</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { 
+                name: 'AI Agents', 
+                icon: Brain, 
+                count: marketplaceAddons.filter(a => a.category === 'ai-agents').length,
+                description: 'Specialized AI agents for domain expertise',
+                gradient: 'from-primary to-accent'
+              },
+              { 
+                name: 'Industry Solutions', 
+                icon: Building, 
+                count: marketplaceAddons.filter(a => a.category === 'industry-solutions').length,
+                description: 'Vertical-specific business solutions',
+                gradient: 'from-success to-accent'
+              },
+              { 
+                name: 'Data Connectors', 
+                icon: Database, 
+                count: marketplaceAddons.filter(a => a.category === 'data-connectors').length,
+                description: 'Connect to your existing data sources',
+                gradient: 'from-warning to-destructive'
+              },
+              { 
+                name: 'Security Tools', 
+                icon: Lock, 
+                count: marketplaceAddons.filter(a => a.category === 'security-enhancements').length,
+                description: 'Enterprise-grade security enhancements',
+                gradient: 'from-accent to-primary'
+              }
+            ].map((category) => (
+              <Card 
+                key={category.name}
+                onClick={() => setSelectedCategory(category.name.toLowerCase().replace(' ', '-') as AddonCategory)}
+                className="glass border-glass-border/30 cursor-pointer transition-all duration-300 hover:scale-105 hover:border-primary/20"
+              >
+                <CardContent className="p-6">
+                  <div className={`bg-gradient-to-br ${category.gradient} rounded-xl p-4 w-fit mb-4`}>
+                    <category.icon size={32} className="text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
+                  <p className="text-muted-foreground text-sm mb-4">{category.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-primary font-medium">{category.count} add-ons</span>
+                    <ChevronRight className="text-muted-foreground" size={16} />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Developer Program CTA */}
+        <Card className="glass border-glass-border/30 bg-gradient-to-r from-primary/10 to-accent/10">
+          <CardContent className="p-12 text-center">
+            <h2 className="text-3xl font-bold mb-4">
+              Build for the Kodaxa Marketplace
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Join our developer program and reach thousands of businesses worldwide
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="text-center">
+                <div className="bg-success/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <DollarSign size={24} className="text-success" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">70% Revenue Share</h3>
+                <p className="text-muted-foreground text-sm">Keep the majority of your earnings</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-primary/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Code size={24} className="text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Easy Integration</h3>
+                <p className="text-muted-foreground text-sm">Simple APIs and comprehensive docs</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-accent/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Users size={24} className="text-accent" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Global Reach</h3>
+                <p className="text-muted-foreground text-sm">Access to enterprise customers worldwide</p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="flex items-center gap-2">
+                <ExternalLink size={20} />
+                Developer Portal
+              </Button>
+              <Button variant="outline" size="lg">
+                View Documentation
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );
