@@ -27,7 +27,7 @@ const Auth = () => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/');
+        navigate('/dashboard');
       }
     };
     checkUser();
@@ -48,7 +48,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: firstName,
             last_name: lastName,
@@ -76,7 +76,7 @@ const Auth = () => {
           title: "Account created successfully!",
           description: "Welcome to your empire-building platform.",
         });
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
@@ -112,7 +112,7 @@ const Auth = () => {
           title: "Welcome back!",
           description: "Successfully signed in to your empire-building platform.",
         });
-        navigate('/');
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
