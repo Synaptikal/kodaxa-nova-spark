@@ -26,6 +26,26 @@ import {
 } from "lucide-react";
 
 export default function Profile() {
+  const { profile, updateProfile, subscription } = useAuth();
+
+  const availableAgents = [
+    { id: 'hf-blenderbot', name: 'BlenderBot (Free)', description: 'Conversational AI assistant' },
+    { id: 'hf-gpt2', name: 'GPT-2 (Free)', description: 'Fast general-purpose text generation' },
+    { id: 'hf-distilbert', name: 'DistilBERT (Free)', description: 'Efficient question answering' },
+    ...(subscription?.subscribed ? [
+      { id: 'gpt-4', name: 'GPT-4 (Premium)', description: 'Advanced reasoning and analysis' },
+      { id: 'claude-3', name: 'Claude 3 (Premium)', description: 'Expert in complex reasoning' },
+      { id: 'gemini-pro', name: 'Gemini Pro (Premium)', description: 'Multimodal AI assistant' }
+    ] : [])
+  ];
+
+  const handleAgentChange = async (agentId: string) => {
+    try {
+      await updateProfile({ preferred_agent: agentId });
+    } catch (error) {
+      console.error('Error updating preferred agent:', error);
+    }
+  };
   const apiKeys = [
     {
       id: 1,
