@@ -151,9 +151,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const createDefaultProfile = async (userId: string) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData.user;
+
+      if (!user) return;
+
+      const defaultProfile = {
+        user_id: userId,
+        first_name: user.user_metadata?.first_name || null,
+        last_name: user.user_metadata?.last_name || null,
+        company_name: user.user_metadata?.company_name || null,
+        role: null,
+        avatar_url: null,
+        bio: null,
+        phone: null,
+        website: null,
+        linkedin_url: null
+      };
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .insert(defaultProfile)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating default profile:', {
+          message: error.message,
+          code: error.code,
+          details: error.details
+        });
+        return;
+      }
+
+      setProfile(data);
+      console.log('Default profile created successfully');
+    } catch (error) {
+      console.error('Error creating default profile:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
+    }
+  };
+
   const checkSubscription = async () => {
     if (!session) return;
-    
+
     try {
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
@@ -162,13 +207,35 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
 
       if (error) {
-        console.error('Subscription check error:', error);
+        console.error('Subscription check error:', {
+          message: error.message || 'Unknown subscription error',
+          details: error
+        });
+        // Set default subscription state
+        setSubscription({
+          subscribed: false,
+          subscription_tier: null,
+          subscription_status: 'inactive',
+          subscription_end: null,
+          annual_billing: false
+        });
         return;
       }
 
       setSubscription(data);
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error('Error checking subscription:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
+      // Set default subscription state on error
+      setSubscription({
+        subscribed: false,
+        subscription_tier: null,
+        subscription_status: 'inactive',
+        subscription_end: null,
+        annual_billing: false
+      });
     }
   };
 
