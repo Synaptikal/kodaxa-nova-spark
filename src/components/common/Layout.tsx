@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { Breadcrumbs } from './Breadcrumbs';
+import { FloatingMarketplaceButton } from './FloatingMarketplaceButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ export const Layout: React.FC<LayoutProps> = ({
           {children}
         </main>
       </div>
+      <FloatingMarketplaceButton />
     </div>
   );
 };
