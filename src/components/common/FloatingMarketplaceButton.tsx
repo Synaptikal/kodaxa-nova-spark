@@ -14,10 +14,12 @@ export const FloatingMarketplaceButton: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const location = useLocation();
   
-  // Don't show on marketplace pages
-  if (location.pathname.startsWith('/add-ons') || 
-      location.pathname.startsWith('/pricing') || 
-      location.pathname.startsWith('/subscription')) {
+  // Don't show on marketplace pages or landing page
+  if (location.pathname.startsWith('/add-ons') ||
+      location.pathname.startsWith('/pricing') ||
+      location.pathname.startsWith('/subscription') ||
+      location.pathname === '/' ||
+      location.pathname === '/landing') {
     return null;
   }
 
