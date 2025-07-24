@@ -72,6 +72,13 @@ export function QuickActions() {
       variant: "ghost" as const,
       action: () => handleAction("Admin Panel", "Accessing enterprise configuration center", "/settings"),
     },
+    {
+      icon: ExternalLink,
+      label: "View Marketing Page",
+      description: "See platform overview",
+      variant: "ghost" as const,
+      action: () => window.open('/landing', '_blank'),
+    },
   ];
 
   return (
