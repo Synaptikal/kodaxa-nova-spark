@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { debugSupabaseConnection, logSupabaseError } from '@/utils/supabaseDebug';
 
 interface Profile {
   id: string;
@@ -266,8 +267,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    // Test database connection on initialization
-    testDatabaseConnection();
+    // Run comprehensive debug on initialization
+    if (process.env.NODE_ENV === 'development') {
+      debugSupabaseConnection();
+    }
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
