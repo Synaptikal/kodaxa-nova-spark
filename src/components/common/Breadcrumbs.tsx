@@ -10,6 +10,7 @@ interface BreadcrumbItem {
 
 const pathLabels: Record<string, string> = {
   '': 'Dashboard',
+  'dashboard': 'Dashboard',
   'ai': 'AI Workspace',
   'ai-workspace': 'AI Workspace',
   'quorum': 'AI Quorum',
@@ -47,7 +48,7 @@ export const Breadcrumbs: React.FC = () => {
   }
 
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Home', href: '/', icon: Home }
+    { label: 'Home', href: '/dashboard', icon: Home }
   ];
 
   let currentPath = '';
