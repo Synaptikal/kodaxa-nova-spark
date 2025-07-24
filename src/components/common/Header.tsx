@@ -180,7 +180,9 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
     <header className="glass border-b border-glass-border/30 sticky top-0 z-50 p-4">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center gap-6">
-          <Logo />
+          <Link to={location.pathname === '/landing' || location.pathname === '/' ? '/' : '/dashboard'}>
+            <Logo />
+          </Link>
           {title && (
             <div className="h-6 w-px bg-border/50" />
           )}
