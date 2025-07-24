@@ -22,11 +22,20 @@ const queryClient = new QueryClient({
 
 // Performance monitoring wrapper
 const AppWithMonitoring = () => {
-  usePerformanceMonitoring();
+  // Temporarily disable performance monitoring to isolate issue
+  // usePerformanceMonitoring();
   return <App />;
 };
 
-createRoot(document.getElementById("root")!).render(
+// Ensure DOM is ready
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error('Root element not found');
+}
+
+// Create root and render app
+const reactRoot = createRoot(root);
+reactRoot.render(
   <React.StrictMode>
     <ErrorBoundary>
       <BrowserRouter>
