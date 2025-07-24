@@ -83,14 +83,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
+      if (error) {
+        // PGRST116 means no rows returned, which is fine for profiles
+        if (error.code === 'PGRST116') {
+          console.log('No profile found for user, will create default profile');
+          // Create a default profile if none exists
+          await createDefaultProfile(userId);
+          return;
+        }
+
+        // Handle table doesn't exist error
+        if (error.code === '42P01') {
+          console.warn('Profiles table does not exist. Skipping profile fetch.');
+          return;
+        }
+
+        console.error('Error fetching profile:', {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint
+        });
         return;
       }
 
       setProfile(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Error fetching profile:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
     }
   };
 
@@ -102,13 +124,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         .eq('user_id', userId);
 
       if (error) {
-        console.error('Error fetching user roles:', error);
+        // Handle table doesn't exist error
+        if (error.code === '42P01') {
+          console.warn('User roles table does not exist. User will have default permissions.');
+          setUserRoles([]);
+          return;
+        }
+
+        console.error('Error fetching user roles:', {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint
+        });
+        setUserRoles([]);
         return;
       }
 
       setUserRoles(data || []);
     } catch (error) {
-      console.error('Error fetching user roles:', error);
+      console.error('Error fetching user roles:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: error
+      });
+      setUserRoles([]);
     }
   };
 
