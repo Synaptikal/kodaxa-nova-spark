@@ -51,6 +51,12 @@ const App = () => (
       <Sonner />
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={
+            <Suspense fallback={<PageLoadingFallback />}>
+              <LandingPage />
+            </Suspense>
+          } />
           <Route path="/landing" element={
             <Suspense fallback={<PageLoadingFallback />}>
               <LandingPage />
@@ -62,7 +68,9 @@ const App = () => (
             </Suspense>
           } />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/" element={
+
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
             <ProtectedRoute>
               <Index />
             </ProtectedRoute>
