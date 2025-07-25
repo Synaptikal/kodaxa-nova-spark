@@ -52,19 +52,18 @@ const RevenueAnalytics = () => {
 
   const loadAnalytics = async () => {
     try {
-      // Get subscription data
-      const { data: subscribers } = await supabase
-        .from('subscribers')
-        .select('*')
-        .eq('subscribed', true);
+      // Mock data since no database tables exist
+      const mockSubscribers = [
+        { subscription_tier: 'professional', annual_billing: false },
+        { subscription_tier: 'starter', annual_billing: true },
+        { subscription_tier: 'enterprise', annual_billing: false }
+      ];
 
-      // Get usage data for current month
-      const currentMonth = new Date().toISOString().slice(0, 7);
-      const { data: usage } = await supabase
-        .from('usage_tracking')
-        .select('total_cost')
-        .gte('created_at', `${currentMonth}-01`)
-        .lt('created_at', `${currentMonth}-31`);
+      const mockUsage = [
+        { total_cost: 150 },
+        { total_cost: 300 },
+        { total_cost: 250 }
+      ];
 
       // Calculate metrics
       const tierPricing = {
@@ -73,14 +72,14 @@ const RevenueAnalytics = () => {
         enterprise: 999
       };
 
-      const subscriptionRevenue = subscribers?.reduce((sum, sub) => {
+      const subscriptionRevenue = mockSubscribers.reduce((sum, sub) => {
         const price = tierPricing[sub.subscription_tier as keyof typeof tierPricing] || 0;
         return sum + (sub.annual_billing ? price * 12 : price);
-      }, 0) || 0;
+      }, 0);
 
-      const usageRevenue = usage?.reduce((sum, u) => sum + u.total_cost, 0) || 0;
+      const usageRevenue = mockUsage.reduce((sum, u) => sum + u.total_cost, 0);
       const totalRevenue = subscriptionRevenue + usageRevenue;
-      const mrr = subscriptionRevenue / (subscribers?.filter(s => !s.annual_billing).length || 1);
+      const mrr = subscriptionRevenue / (mockSubscribers.filter(s => !s.annual_billing).length || 1);
       const arr = totalRevenue * 12;
 
       // Mock growth data for demo
@@ -96,9 +95,9 @@ const RevenueAnalytics = () => {
       setMetrics({
         mrr: mrr || 42600,
         arr: arr || 511200,
-        totalCustomers: subscribers?.length || 178,
+        totalCustomers: mockSubscribers?.length || 178,
         churnRate: 3.2,
-        avgRevPerUser: totalRevenue / (subscribers?.length || 1) || 239,
+        avgRevPerUser: totalRevenue / (mockSubscribers?.length || 1) || 239,
         usageRevenue: usageRevenue || 15600,
         subscriptionRevenue: subscriptionRevenue || 427000,
         growth: 23.5

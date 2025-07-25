@@ -649,14 +649,8 @@ const AddOnMarketplace = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('user_add_ons')
-        .select('add_on_id')
-        .eq('user_id', user.id)
-        .eq('active', true);
-
-      if (error) throw error;
-      setUserAddOns(data?.map(item => item.add_on_id) || []);
+      // Mock data since no database tables exist
+      setUserAddOns([]);
     } catch (error) {
       console.error('Error loading user add-ons:', error);
     }

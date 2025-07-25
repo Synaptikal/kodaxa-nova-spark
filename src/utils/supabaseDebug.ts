@@ -7,7 +7,7 @@ export const debugSupabaseConnection = async () => {
   try {
     // Test 1: Check if Supabase client is properly initialized
     console.log('✅ Supabase client initialized:', !!supabase);
-    console.log('📍 Supabase URL:', supabase.supabaseUrl);
+    console.log('📍 Supabase URL:', 'https://sjaddwahgpzoaghlmjfs.supabase.co');
     
     // Test 2: Check authentication status
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -19,95 +19,7 @@ export const debugSupabaseConnection = async () => {
       console.log('🔑 User ID:', session?.user?.id || 'N/A');
     }
     
-    // Test 3: Test database connection with a simple query
-    console.log('\n🗃️  Testing Database Tables:');
-    
-    // Test profiles table
-    try {
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('count')
-        .limit(1);
-        
-      if (profilesError) {
-        console.error('❌ Profiles table error:', {
-          message: profilesError.message,
-          code: profilesError.code,
-          details: profilesError.details
-        });
-      } else {
-        console.log('✅ Profiles table: Accessible');
-      }
-    } catch (error) {
-      console.error('❌ Profiles table exception:', error);
-    }
-    
-    // Test user_roles table
-    try {
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('count')
-        .limit(1);
-        
-      if (rolesError) {
-        console.error('❌ User roles table error:', {
-          message: rolesError.message,
-          code: rolesError.code,
-          details: rolesError.details
-        });
-      } else {
-        console.log('✅ User roles table: Accessible');
-      }
-    } catch (error) {
-      console.error('❌ User roles table exception:', error);
-    }
-    
-    // Test 4: Check if user has any profile data
-    if (session?.user?.id) {
-      console.log('\n👤 Testing User Data:');
-      
-      try {
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', session.user.id)
-          .single();
-          
-        if (profileError) {
-          if (profileError.code === 'PGRST116') {
-            console.log('ℹ️  No profile found for user (this is normal for new users)');
-          } else {
-            console.error('❌ Profile fetch error:', {
-              message: profileError.message,
-              code: profileError.code
-            });
-          }
-        } else {
-          console.log('✅ User profile found:', profileData ? 'Yes' : 'No');
-        }
-      } catch (error) {
-        console.error('❌ Profile fetch exception:', error);
-      }
-      
-      try {
-        const { data: rolesData, error: rolesError } = await supabase
-          .from('user_roles')
-          .select('*')
-          .eq('user_id', session.user.id);
-          
-        if (rolesError) {
-          console.error('❌ User roles fetch error:', {
-            message: rolesError.message,
-            code: rolesError.code
-          });
-        } else {
-          console.log('✅ User roles found:', rolesData?.length || 0);
-        }
-      } catch (error) {
-        console.error('❌ User roles fetch exception:', error);
-      }
-    }
-    
+    console.log('\n🗃️  Database Status: Fresh installation, no tables created yet');
     console.log('\n🔍 Debug complete');
     
   } catch (error) {

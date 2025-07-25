@@ -15,7 +15,7 @@ import {
   Lightbulb, Zap, Award, MapPin, Clock, ArrowUp, ArrowDown, Settings,
   RefreshCw, Edit, Copy, Play, AlertTriangle
 } from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, FunnelChart, Funnel, LabelList } from 'recharts';
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ComposedChart, FunnelChart, Funnel, LabelList } from 'recharts';
 
 interface MarketData {
   id: string;
