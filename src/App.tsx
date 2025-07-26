@@ -57,11 +57,6 @@ const App = () => (
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={
-            <Suspense fallback={<PageLoadingFallback />}>
-              <LandingPage />
-            </Suspense>
-          } />
           <Route path="/landing" element={
             <Suspense fallback={<PageLoadingFallback />}>
               <LandingPage />
@@ -74,7 +69,12 @@ const App = () => (
           } />
           <Route path="/auth" element={<Auth />} />
 
-          {/* Protected Routes */}
+          {/* Protected Routes - Dashboard as main entry point */}
+          <Route path="/" element={
+            <ProtectedRoute>
+              <Index />
+            </ProtectedRoute>
+          } />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Index />
@@ -153,7 +153,7 @@ const App = () => (
           <Route path="/compliance-sentinel" element={
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
-                <AdminPanel />
+                <ComplianceSentinel />
               </Suspense>
             </ProtectedRoute>
           } />
@@ -273,6 +273,27 @@ const App = () => (
             <ProtectedRoute>
               <Suspense fallback={<PageLoadingFallback />}>
                 <ComplianceSentinel />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/history-logs" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <HistoryLogs />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/file-manager" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <FileManager />
+              </Suspense>
+            </ProtectedRoute>
+          } />
+          <Route path="/quantum-workspace" element={
+            <ProtectedRoute>
+              <Suspense fallback={<PageLoadingFallback />}>
+                <QuantumWorkspace />
               </Suspense>
             </ProtectedRoute>
           } />

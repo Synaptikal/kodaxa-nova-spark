@@ -8,6 +8,7 @@ interface ContextualHeaderProps {
 }
 
 const getPageTitle = (pathname: string): string => {
+  if (pathname === '/') return 'Dashboard';
   if (pathname.startsWith('/ai')) return 'AI Workspace';
   if (pathname.startsWith('/ip')) return 'IP Fortress';
   if (pathname.startsWith('/forge')) return 'Capital Forge';
@@ -17,7 +18,7 @@ const getPageTitle = (pathname: string): string => {
   if (pathname.startsWith('/files')) return 'File Manager';
   if (pathname.startsWith('/history')) return 'History & Logs';
   if (pathname.startsWith('/dashboard')) return 'Dashboard';
-  return 'Kodaxa Platform';
+  return 'Kodaxa Orchestrator';
 };
 
 export const ContextualHeader: React.FC<ContextualHeaderProps> = ({ title }) => {

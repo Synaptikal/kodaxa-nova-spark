@@ -1,6 +1,5 @@
 import React from 'react';
-import { PersistentSidebar } from './PersistentSidebar';
-import { ContextualHeader } from './ContextualHeader';
+import { Header } from '../common/Header';
 
 interface MasterLayoutProps {
   children: React.ReactNode;
@@ -9,20 +8,16 @@ interface MasterLayoutProps {
 
 export const MasterLayout: React.FC<MasterLayoutProps> = ({ children, title }) => {
   return (
-    <div className="min-h-screen w-full flex bg-background">
-      {/* Persistent Left Sidebar - 240px */}
-      <PersistentSidebar />
+    <div className="min-h-screen w-full bg-background">
+      {/* Global Header - Fixed at top */}
+      <Header title={title} />
       
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col" style={{ width: 'calc(100vw - 240px)' }}>
-        {/* Contextual Header - 60px height */}
-        <ContextualHeader title={title} />
-        
-        {/* Scrollable Content */}
-        <main className="flex-1 overflow-auto glass p-6">
+      {/* Main Content Area with top padding for fixed header */}
+      <main className="pt-16 min-h-screen glass">
+        <div className="p-6">
           {children}
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
